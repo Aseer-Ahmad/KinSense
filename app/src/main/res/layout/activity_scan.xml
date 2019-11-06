@@ -4,11 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Scan">
+
+
+    <Button
+        android:id="@+id/button_scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/scan_device"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/textview_scanning_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        />
+
 
     <ListView
         android:id="@+id/listview_devices"
         android:layout_width="match_parent"
+        android:layout_margin="10dp"
         android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -15,7 +15,7 @@
 
         <Button
             android:id="@+id/button_bluetooth_enable"
-            android:layout_width="70pt"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/bluetooth_enable" />
 
@@ -33,19 +33,12 @@
 
 
     <ImageButton
+        android:id="@+id/button_begin"
         android:src="@drawable/ic_begin_workout_124dp"
         android:layout_gravity="center"
         android:layout_width="124dp"
         android:layout_height="124dp"
         android:clickable="false"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        android:text="15:00"/>
 
 
 </LinearLayout>
