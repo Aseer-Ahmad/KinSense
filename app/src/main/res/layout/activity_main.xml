@@ -7,19 +7,45 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/button_bluetooth_enable"
+    <LinearLayout
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/bluetooth_enable"
-       />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_bluetooth_enable"
+            android:layout_width="70pt"
+            android:layout_height="wrap_content"
+            android:text="@string/bluetooth_enable" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/textview_connection_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NOT CONNECTED" />
+
+    </LinearLayout>
+
+
+    <ImageButton
+        android:src="@drawable/ic_begin_workout_124dp"
+        android:layout_gravity="center"
+        android:layout_width="124dp"
+        android:layout_height="124dp"
+        android:clickable="false"/>
 
     <TextView
-        android:id="@+id/textview_paired_devices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:text="15:00"/>
 
-        />
 
 </LinearLayout>
