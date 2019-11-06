@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">KinSense</string>
-    <string name="bluetooth_enable">BLE</string>
+    <string name="bluetooth_enable">CONNECT TO DEVICE</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
