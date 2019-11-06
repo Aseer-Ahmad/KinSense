@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">KinSense</string>
+    <string name="bluetooth_enable">BLE</string>
+</resources>
