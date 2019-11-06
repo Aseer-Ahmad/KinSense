@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private void enableBluetooth() {
 
         if (bluetoothAdapter == null) {
-            // Device doesn't support Bluetooth
+            // Device doesn't support Bluetooth . Nothing can be done
 
         }else if(!bluetoothAdapter.isEnabled()){
 
