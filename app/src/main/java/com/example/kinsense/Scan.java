@@ -206,7 +206,6 @@ public class Scan extends AppCompatActivity {
 
                 try {
                     bluetoothSocket =(BluetoothSocket) bluetoothDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(bluetoothDevice,2);
-
                     bluetoothSocket.connect();
 
                     Message message = Message.obtain();
