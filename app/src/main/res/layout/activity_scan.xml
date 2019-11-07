@@ -15,18 +15,48 @@
         android:text="@string/scan_device"
         android:layout_margin="10dp"/>
 
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/discovered_devices"
+        android:layout_marginLeft="15dp"/>
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <TextView
+        android:textStyle="bold"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/colorPrimary"
         android:id="@+id/textview_scanning_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         />
-
-
+</LinearLayout>
     <ListView
-        android:id="@+id/listview_devices"
+        android:id="@+id/listview_discoverd_devices"
         android:layout_width="match_parent"
         android:layout_margin="10dp"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/paired_devices"
+        android:layout_marginLeft="15dp"/>
+    <ListView
+        android:id="@+id/listview_paired_devices"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"/>
+
+
+
 
 </LinearLayout>

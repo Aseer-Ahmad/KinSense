@@ -2,5 +2,8 @@
     <string name="app_name">KinSense</string>
     <string name="bluetooth_enable">CONNECT TO DEVICE</string>
     <string name="scan_device">FIND YOUR DEVICE</string>
+    <string name="paired_devices">PAIRED DEVICES</string>
+    <string name="discovered_devices">DISCOVERED DEVICES</string>
 
- </resources>
+
+</resources>

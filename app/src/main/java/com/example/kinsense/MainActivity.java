@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
     }
 
     private void enableBluetooth() {
@@ -65,22 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showPairedDevices() {
 
-        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-        int totaldevices = pairedDevices.size();
-
-        if (totaldevices > 0) {
-            // There are paired devices. Get the name and address of each paired device.
-            for (BluetoothDevice device : pairedDevices) {
-                String deviceName = device.getName();
-                String deviceHardwareAddress = device.getAddress(); // MAC address
-
-                // for displaying information
-            }
-        }
-
-    }
 
 /*
     @Override
