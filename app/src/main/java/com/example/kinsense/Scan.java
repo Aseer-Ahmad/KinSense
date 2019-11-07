@@ -35,7 +35,7 @@ import java.util.UUID;
 
 public class Scan extends AppCompatActivity {
 
-    private static final UUID MY_UUID = UUID.fromString("03fdae7c-0164-11ea-8d71-362b9e155667");
+    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private ListView listViewDiscovered;
     private ListView listViewPaired;
     private List<String> listDiscovered = new ArrayList<>();
@@ -157,9 +157,11 @@ public class Scan extends AppCompatActivity {
             switch(msg.what){
 
                 case STATE_CONNECTED:
-                    Intent intent = new Intent(Scan.this, MainActivity.class);
-                    intent.putExtra("Status", "CONNECTED");
-                    startActivity(intent);
+                    //Intent intent = new Intent(Scan.this, MainActivity.class);
+                    //intent.putExtra("Status", "CONNECTED");
+                    //startActivity(intent);
+                    Toast.makeText(getApplicationContext(), "CONNECTED", Toast.LENGTH_LONG).show();
+
                     break;
                 case STATE_CONNECTION_FAILED:
                     Toast.makeText(getApplicationContext(), "Connection Failed: TRY AGAIN", Toast.LENGTH_LONG).show();
@@ -177,7 +179,7 @@ public class Scan extends AppCompatActivity {
             this.bluetoothDevice = bluetoothDevice;
 
             try {
-                    UUID MY_UUID = bluetoothDevice.getUuids()[0].getUuid();
+                    //UUID MY_UUID = bluetoothDevice.getUuids()[0].getUuid();
                     bluetoothSocket =bluetoothDevice.createRfcommSocketToServiceRecord(MY_UUID);
             }
             catch(IOException e){
@@ -200,11 +202,17 @@ public class Scan extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
 
-                Log.d("","trying fallback...");
+                Log.d("Client Socket: ","Trying fallback...");
 
                 try {
-                    bluetoothSocket =(BluetoothSocket) bluetoothDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(bluetoothDevice,1);
+                    bluetoothSocket =(BluetoothSocket) bluetoothDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(bluetoothDevice,2);
+
                     bluetoothSocket.connect();
+
+                    Message message = Message.obtain();
+                    message.what = STATE_CONNECTED;
+                    //message.obj = bluetoothSocket; // also sending the socket to main activity
+                    handler.sendMessage(message);
                 } catch (Exception e1){
 
                     Log.d("", "Couldn't establish connection");
