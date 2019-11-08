@@ -205,7 +205,10 @@ public class Scan extends AppCompatActivity {
                 Log.d("Client Socket: ","Trying fallback...");
 
                 try {
-                    bluetoothSocket =(BluetoothSocket) bluetoothDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(bluetoothDevice,2);
+                    bluetoothSocket =(BluetoothSocket) bluetoothDevice.getClass()
+                            .getMethod("createRfcommSocket", new Class[] {int.class})
+                            .invoke(bluetoothDevice,2);
+
                     bluetoothSocket.connect();
 
                     Message message = Message.obtain();

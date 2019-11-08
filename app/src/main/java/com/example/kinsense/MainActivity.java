@@ -8,8 +8,13 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,9 +26,14 @@ public class MainActivity extends AppCompatActivity {
     //components
     private Button b1;
     private TextView t1;
+    private Button button_beginwork;
+    private Button button_stopwork;
+    private Animation rotate;
+    private ImageView icanchor;
+    private Chronometer timer;
 
     //resources
-    private BluetoothAdapter bluetoothAdapter = null;
+    private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     //CONSTANTS
     private static final int REQUEST_ENABLE_BT = 1;
@@ -33,9 +43,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        b1 = findViewById((R.id.button_bluetooth_enable));
+        findComponenets();
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,9 +55,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        button_beginwork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    icanchor.startAnimation(rotate);
+                    button_stopwork.animate().alpha(1).translationY(-80).setDuration(400).start();
+                    button_beginwork.animate().alpha(0).setDuration(400).start();
+                    //set timer here
+                    timer.setBase(SystemClock.elapsedRealtime());
+                    timer.start();
+            }
+        });
 
+        button_stopwork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                icanchor.clearAnimation();
+                button_beginwork.animate().alpha(1).setDuration(400).start();
+                button_stopwork.animate().alpha(0).translationY(80).setDuration(400).start();
+                //stop timer here
+                timer.stop();
+            }
+        });
 
     }
+
+    private void findComponenets() {
+        b1 = findViewById((R.id.button_bluetooth_enable));
+        button_beginwork = findViewById(R.id.button_beginworkout);
+        button_stopwork = findViewById(R.id.button_stopworkout);
+        button_stopwork.setAlpha(0);
+        rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
+        icanchor = findViewById(R.id.icanchor);
+        timer = findViewById(R.id.chronometer_timer);
+    }
+
 
     private void enableBluetooth() {
 

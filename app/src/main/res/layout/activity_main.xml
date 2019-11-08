@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -17,7 +18,7 @@
             android:id="@+id/button_bluetooth_enable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bluetooth_enable" />
+            android:text="@string/bluetooth_enable"/>
 
         <View
             android:layout_width="0dp"
@@ -27,18 +28,67 @@
             android:id="@+id/textview_connection_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorText"
+            android:textStyle="bold"
             android:text="NOT CONNECTED" />
 
     </LinearLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="402dp">
 
-    <ImageButton
-        android:id="@+id/button_begin"
-        android:src="@drawable/ic_begin_workout_124dp"
+        <ImageView
+            android:id="@+id/bgcircle"
+            android:layout_width="276dp"
+            android:layout_height="247dp"
+            android:layout_gravity="center"
+            android:src="@drawable/bgcircle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/icanchor"
+            android:layout_width="312dp"
+            android:layout_height="299dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icanchor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.511" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Chronometer
+        android:id="@+id/chronometer_timer"
+        android:textSize="62sp"
+        android:textColor="@color/colorWhite"
         android:layout_gravity="center"
-        android:layout_width="124dp"
-        android:layout_height="124dp"
-        android:clickable="false"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    <Button
+        android:id="@+id/button_beginworkout"
+        android:text="Begin"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btngreen"
+        android:layout_gravity="center"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"/>
 
+    <Button
+        android:id="@+id/button_stopworkout"
+        android:text="STOP NOW"
+        android:background="@drawable/btnred"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

@@ -32,7 +32,7 @@
     <TextView
         android:textStyle="bold"
         android:layout_marginRight="15dp"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorGreen"
         android:id="@+id/textview_scanning_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
