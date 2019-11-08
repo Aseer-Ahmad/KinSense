@@ -51,10 +51,11 @@
 
         <ImageView
             android:id="@+id/icanchor"
-            android:layout_width="312dp"
-            android:layout_height="299dp"
+            android:layout_width="314dp"
+            android:layout_height="294dp"
             android:layout_gravity="center"
             android:src="@drawable/icanchor"
+            android:rotation="32"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.49"

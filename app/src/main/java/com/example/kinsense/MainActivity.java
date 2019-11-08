@@ -61,9 +61,12 @@ public class MainActivity extends AppCompatActivity {
                     icanchor.startAnimation(rotate);
                     button_stopwork.animate().alpha(1).translationY(-80).setDuration(400).start();
                     button_beginwork.animate().alpha(0).setDuration(400).start();
+                    button_beginwork.setClickable(false);
                     //set timer here
                     timer.setBase(SystemClock.elapsedRealtime());
                     timer.start();
+
+                    //start gathering data from device
             }
         });
 
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 icanchor.clearAnimation();
                 button_beginwork.animate().alpha(1).setDuration(400).start();
                 button_stopwork.animate().alpha(0).translationY(80).setDuration(400).start();
+                button_beginwork.setClickable(true);
                 //stop timer here
                 timer.stop();
             }
@@ -104,10 +108,7 @@ public class MainActivity extends AppCompatActivity {
            // showPairedDevices();
            // Toast.makeText(this, "Bluetooth is already enabled!! " , Toast.LENGTH_SHORT).show();
         }
-
     }
-
-
 
 /*
     @Override
@@ -126,4 +127,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 */
+
 }
