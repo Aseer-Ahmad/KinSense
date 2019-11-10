@@ -157,10 +157,15 @@ public class Scan extends AppCompatActivity {
             switch(msg.what){
 
                 case STATE_CONNECTED:
-                    //Intent intent = new Intent(Scan.this, MainActivity.class);
-                    //intent.putExtra("Status", "CONNECTED");
-                    //startActivity(intent);
-                    Toast.makeText(getApplicationContext(), "CONNECTED", Toast.LENGTH_LONG).show();
+
+                    BluetoothDevice device  = (BluetoothDevice) msg.obj;
+
+                    Intent intent = new Intent(Scan.this, MainActivity.class);
+                    intent.putExtra("Status", "CONNECTED");
+                    intent.putExtra("Device", device.getName() );
+                    startActivity(intent);
+
+                    //Toast.makeText(getApplicationContext(), "CONNECTED To"+device.getName(), Toast.LENGTH_LONG).show();
 
                     break;
                 case STATE_CONNECTION_FAILED:
@@ -196,7 +201,7 @@ public class Scan extends AppCompatActivity {
                 // if connected send message to MainActivity
                 Message message = Message.obtain();
                 message.what = STATE_CONNECTED;
-                //message.obj = bluetoothSocket; // also sending the socket to main activity
+                message.obj = bluetoothDevice; // also sending the socket to main activity
                 handler.sendMessage(message);
 
             } catch (IOException e) {
@@ -213,12 +218,13 @@ public class Scan extends AppCompatActivity {
 
                     Message message = Message.obtain();
                     message.what = STATE_CONNECTED;
-                    //message.obj = bluetoothSocket; // also sending the socket to main activity
+                    message.obj = bluetoothDevice; // also sending the socket to main activity
                     handler.sendMessage(message);
                 } catch (Exception e1){
 
                     Log.d("", "Couldn't establish connection");
                     e.printStackTrace();
+
                     // if not connected send message to MainActivity
                     Message message = Message.obtain();
                     message.what = STATE_CONNECTION_FAILED;

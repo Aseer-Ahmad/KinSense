@@ -7,8 +7,10 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.telecom.Call;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -45,9 +47,27 @@ public class MainActivity extends AppCompatActivity {
 
 
         findComponenets();
+
+        //Get data/status & socket from Scan.class intent
+        Intent intent = getIntent();
+        String status = intent.getStringExtra("Status");
+        String devicename = intent.getStringExtra("Device");
+        if(status !=null)
+            t1.setText("CONNECTED to "+devicename);
+
+
+        if(t1.getText().equals("NOT CONNECTED") ) {
+            button_beginwork.setEnabled(false);
+            button_beginwork.setText("BEGIN (first connect to device)");
+        }else{
+            button_beginwork.setEnabled(true);
+            button_beginwork.setText("BEGIN");
+        }
+
+
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // bluetooth enable button
 
                 enableBluetooth();
                 Intent intent = new Intent(MainActivity.this, Scan.class);
@@ -82,9 +102,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //CallAPI class temp
+        CallAPI callAPI = new CallAPI(this);
+
+
     }
 
     private void findComponenets() {
+        t1 = findViewById(R.id.textview_connection_status); // connection status in mainActivity
         b1 = findViewById((R.id.button_bluetooth_enable));
         button_beginwork = findViewById(R.id.button_beginworkout);
         button_stopwork = findViewById(R.id.button_stopworkout);
