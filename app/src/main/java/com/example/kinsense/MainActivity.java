@@ -45,9 +45,59 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         findComponenets();
 
+        getStatusSocket();
+
+        setButtonClikListeners();
+
+        //CallAPI class temp
+        CallAPI callAPI = new CallAPI(this);  // sending context to test with JSON data in assets
+        callAPI.execute();  // to run the doInBackground method of AsyncTask
+
+    }
+
+    private void setButtonClikListeners() {
+
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { // bluetooth enable button
+
+                enableBluetooth();
+                Intent intent = new Intent(MainActivity.this, Scan.class);
+                startActivity(intent);
+            }
+        });
+
+        button_beginwork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                icanchor.startAnimation(rotate);
+                button_stopwork.animate().alpha(1).translationY(-80).setDuration(400).start();
+                button_beginwork.animate().alpha(0).setDuration(400).start();
+                button_beginwork.setClickable(false);
+                //set timer here
+                timer.setBase(SystemClock.elapsedRealtime());
+                timer.start();
+
+                //start gathering data from device
+            }
+        });
+
+        button_stopwork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                icanchor.clearAnimation();
+                button_beginwork.animate().alpha(1).setDuration(400).start();
+                button_stopwork.animate().alpha(0).translationY(80).setDuration(400).start();
+                button_beginwork.setClickable(true);
+                //stop timer here
+                timer.stop();
+            }
+        });
+    }
+
+    private void getStatusSocket() {
         //Get data/status & socket from Scan.class intent
         Intent intent = getIntent();
         String status = intent.getStringExtra("Status");
@@ -63,49 +113,6 @@ public class MainActivity extends AppCompatActivity {
             button_beginwork.setEnabled(true);
             button_beginwork.setText("BEGIN");
         }
-
-
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { // bluetooth enable button
-
-                enableBluetooth();
-                Intent intent = new Intent(MainActivity.this, Scan.class);
-                startActivity(intent);
-            }
-        });
-
-        button_beginwork.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    icanchor.startAnimation(rotate);
-                    button_stopwork.animate().alpha(1).translationY(-80).setDuration(400).start();
-                    button_beginwork.animate().alpha(0).setDuration(400).start();
-                    button_beginwork.setClickable(false);
-                    //set timer here
-                    timer.setBase(SystemClock.elapsedRealtime());
-                    timer.start();
-
-                    //start gathering data from device
-            }
-        });
-
-        button_stopwork.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                icanchor.clearAnimation();
-                button_beginwork.animate().alpha(1).setDuration(400).start();
-                button_stopwork.animate().alpha(0).translationY(80).setDuration(400).start();
-                button_beginwork.setClickable(true);
-                //stop timer here
-                timer.stop();
-            }
-        });
-
-        //CallAPI class temp
-        CallAPI callAPI = new CallAPI(this);
-
-
     }
 
     private void findComponenets() {
