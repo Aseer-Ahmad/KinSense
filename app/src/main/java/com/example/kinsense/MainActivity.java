@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.telecom.Call;
@@ -35,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private Chronometer timer;
 
     //resources
-    private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
+    private BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
 
     //CONSTANTS
     private static final int REQUEST_ENABLE_BT = 1;
@@ -51,11 +54,22 @@ public class MainActivity extends AppCompatActivity {
 
         setButtonClikListeners();
 
-        //CallAPI class temp
-        CallAPI callAPI = new CallAPI(this);  // sending context to test with JSON data in assets
-        callAPI.execute();  // to run the doInBackground method of AsyncTask
+        // Use this check to determine whether BLE is supported on the device. Then
+        // you can selectively disable BLE-related features.
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, "BLE not supported", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        
+        //CallAPI class TESTING
+        //later after testing set JSON data in constructor
+        //execute the async method
+        //getResponse and send it to a new activity
+        //CallAPI callAPI = new CallAPI(this);  // sending context to test with JSON data in assets
+        //callAPI.execute();  // to run the doInBackground method of AsyncTask
 
     }
+
 
     private void setButtonClikListeners() {
 
@@ -96,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void getStatusSocket() {
         //Get data/status & socket from Scan.class intent

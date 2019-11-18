@@ -38,9 +38,6 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
             this.context = context;
         }
 
-        public void setRequest(){
-
-        }
 
         public void getResponse(){
 
