@@ -7,10 +7,14 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -75,7 +79,35 @@ public class DeviceControlActivity extends AppCompatActivity {
 
     }
 
-    public void scanLeDevice(Boolean enable){
+    //scan results for SDK < 21
+    private  BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {
+        @Override
+        public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    //add device to list
+                }
+            });
+        }
+    };
+
+    // scan results for SDK >= 21
+    private ScanCallback scanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            //add Device to list
+        }
+
+        @Override
+        public void onScanFailed(int errorCode) {
+            super.onScanFailed(errorCode);
+        }
+    };
+
+
+
+    public void scanLeDevice(final boolean enable){
 
         final BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
         if(enable){
@@ -85,16 +117,34 @@ public class DeviceControlActivity extends AppCompatActivity {
                 public void run() {
 
                     scanning = false;
-                    bluetoothLeScanner.stopScan();
+                    if(Build.VERSION.SDK_INT < 21){
+                        Log.d(TAG, "Scanning with BluetoohAdapter.LeScanCallBack < 21");
+                        bluetoothAdapter.stopLeScan(leScanCallback);
+                    }else{
+                        Log.d(TAG, "Scanning with ScanCallBack >= 21 ");
+                        bluetoothLeScanner.stopScan(scanCallback);
+                    }
                 }
             }, SCAN_PERIOD);
 
             scanning = true;
-            bluetoothLeScanner.startScan();
+            if(Build.VERSION.SDK_INT < 21){
+                Log.d(TAG, "Scanning with BluetoohAdapter.LeScanCallBack < 21");
+                bluetoothAdapter.startLeScan(leScanCallback);
+            }else{
+                Log.d(TAG, "Scanning with ScanCallBack >= 21 ");
+                bluetoothLeScanner.startScan(scanCallback);
+            }
 
         }else{
             scanning = false;
-            bluetoothLeScanner.stopScan();
+            if(Build.VERSION.SDK_INT < 21){
+                Log.d(TAG, "Scanning with BluetoohAdapter.LeScanCallBack < 21");
+                bluetoothAdapter.stopLeScan(leScanCallback);
+            }else{
+                Log.d(TAG, "Scanning with ScanCallBack >= 21 ");
+                bluetoothLeScanner.stopScan(scanCallback);
+            }
 
         }
     }
