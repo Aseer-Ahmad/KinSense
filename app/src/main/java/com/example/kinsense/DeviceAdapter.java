@@ -38,6 +38,15 @@ public class DeviceAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+
+        ViewGroup view;
+        if(convertView != null)
+            view = (ViewGroup) convertView;
+        else
+            view = (ViewGroup) layoutInflater.inflate(R.layout.item_device_list, null);
+
+        BluetoothDevice bluetoothDevice = listBluetoothDevices.get(position);
+
+        return view;
     }
 }

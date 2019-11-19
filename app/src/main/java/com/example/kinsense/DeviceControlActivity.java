@@ -6,9 +6,11 @@ import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,9 +30,9 @@ public class DeviceControlActivity extends AppCompatActivity {
     Map<String, Integer> devRssiValues = new HashMap<String, Integer>();
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothManager bluetoothManager;
-    List<BluetoothDevice> bluetoothDeviceList;
-    //ArrayAdapter<BluetoothDevice> arrayAdapter;
-
+    List<BluetoothDevice> bluetoothDeviceList = new ArrayList<>();
+    DeviceAdapter deviceAdapter;
+    private Handler handler;
 
     //constants & flags
     private static final long SCAN_PERIOD = 10000; //scanning for 10 seconds
@@ -55,9 +57,8 @@ public class DeviceControlActivity extends AppCompatActivity {
 
         getBluetoothAdapter();
 
-        bluetoothDeviceList = new ArrayList<BluetoothDevice>();
-        arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, bluetoothDeviceList);
-        listViewDevices.setAdapter(arrayAdapter);
+        deviceAdapter = new DeviceAdapter(this, bluetoothDeviceList);
+        listViewDevices.setAdapter(deviceAdapter);
 
 
         buttonScan.setOnClickListener(new View.OnClickListener() {
@@ -72,10 +73,30 @@ public class DeviceControlActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    public void scanLeDevice(Boolean enable){
 
+        final BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+        if(enable){
 
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
 
+                    scanning = false;
+                    bluetoothLeScanner.stopScan();
+                }
+            }, SCAN_PERIOD);
+
+            scanning = true;
+            bluetoothLeScanner.startScan();
+
+        }else{
+            scanning = false;
+            bluetoothLeScanner.stopScan();
+
+        }
     }
 
     public void findComponents(){
