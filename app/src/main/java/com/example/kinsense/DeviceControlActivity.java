@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class DeviceControlActivity extends AppCompatActivity {
     //id components
     ListView listViewDevices;
     Button buttonScan;
+    TextView textViewScanningStatus;
 
 
     @Override
@@ -63,17 +65,13 @@ public class DeviceControlActivity extends AppCompatActivity {
 
         deviceAdapter = new DeviceAdapter(this, bluetoothDeviceList);
         listViewDevices.setAdapter(deviceAdapter);
-
+        //set item click listener
 
         buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(scanning == false){
-                    //start scan here
-
-                }else{
-
-                }
+                if(scanning == false)
+                    scanLeDevice(true);
             }
         });
 
@@ -117,6 +115,7 @@ public class DeviceControlActivity extends AppCompatActivity {
                 public void run() {
 
                     scanning = false;
+                    textViewScanningStatus.setText("Finished");
                     if(Build.VERSION.SDK_INT < 21){
                         Log.d(TAG, "Scanning with BluetoohAdapter.LeScanCallBack < 21");
                         bluetoothAdapter.stopLeScan(leScanCallback);
@@ -128,6 +127,7 @@ public class DeviceControlActivity extends AppCompatActivity {
             }, SCAN_PERIOD);
 
             scanning = true;
+            textViewScanningStatus.setText("Scanning...");
             if(Build.VERSION.SDK_INT < 21){
                 Log.d(TAG, "Scanning with BluetoohAdapter.LeScanCallBack < 21");
                 bluetoothAdapter.startLeScan(leScanCallback);
@@ -152,7 +152,7 @@ public class DeviceControlActivity extends AppCompatActivity {
     public void findComponents(){
         listViewDevices = findViewById(R.id.listview_discoverd_devices);
         buttonScan = findViewById(R.id.button_scan);
-
+        textViewScanningStatus =findViewById(R.id.textview_scanning_status);
     }
 
     public void getBluetoothAdapter(){
