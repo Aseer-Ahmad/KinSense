@@ -63,7 +63,7 @@ public class Scan extends AppCompatActivity {
         b1 = findViewById(R.id.button_scan);
         t1 = findViewById(R.id.textview_scanning_status);
         listViewDiscovered = findViewById(R.id.listview_discoverd_devices);
-        listViewPaired = findViewById(R.id.listview_paired_devices);
+       // listViewPaired = findViewById(R.id.listview_paired_devices);
 
         b1.setOnClickListener(new View.OnClickListener() {  // find your device
             @Override

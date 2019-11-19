@@ -45,18 +45,6 @@
         android:layout_margin="10dp"
         android:layout_height="wrap_content"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/paired_devices"
-        android:layout_marginLeft="15dp"/>
-    <ListView
-        android:id="@+id/listview_paired_devices"
-        android:layout_width="match_parent"
-        android:layout_margin="10dp"
-        android:layout_height="wrap_content"/>
-
-
 
 
 </LinearLayout>

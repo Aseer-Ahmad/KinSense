@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#666" >
+        android:background="#666">
 
         <TextView
             android:id="@+id/title_devices"
