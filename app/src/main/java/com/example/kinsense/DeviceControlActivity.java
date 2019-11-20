@@ -94,6 +94,8 @@ public class DeviceControlActivity extends AppCompatActivity {
             }
         });
 
+        ActivityCompat.requestPermissions(DeviceControlActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
         buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

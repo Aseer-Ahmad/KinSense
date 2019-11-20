@@ -33,9 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
-public class
-MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity {
 
     //components
     private Button b1;
@@ -69,8 +67,6 @@ MainActivity extends AppCompatActivity {
         bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
         findComponenets();
-
-        //getStatusSocket();
 
         setButtonClikListeners();
 
@@ -188,7 +184,6 @@ MainActivity extends AppCompatActivity {
                 String deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
                 bluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
 
-                Toast.makeText(getApplicationContext(), deviceAddress, Toast.LENGTH_SHORT).show();
                 // connect to device using KinService .connect()
                 kinService.connect(deviceAddress);
 
@@ -256,7 +251,7 @@ MainActivity extends AppCompatActivity {
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            kinService = ((KinService .LocalBinder) service).getService();
+            kinService = ((KinService.LocalBinder) service).getService();
             Log.d(TAG, "in on Service Connected");
             if(!kinService.init()) {
                 Log.e(TAG, "Unable to initialize ble");

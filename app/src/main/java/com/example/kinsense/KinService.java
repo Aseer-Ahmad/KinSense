@@ -199,6 +199,14 @@ public class KinService extends Service{
         return super.onUnbind(intent);
     }
 
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    private final IBinder mBinder = new LocalBinder();
+
     public void close() {
         if (bluetoothGatt == null) {
             return;
@@ -208,14 +216,6 @@ public class KinService extends Service{
         bluetoothGatt.close();
         bluetoothGatt = null;
     }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    private final IBinder mBinder = new LocalBinder();
 
     // read data from characteristic of a service
     public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
