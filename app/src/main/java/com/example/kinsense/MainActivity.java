@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.telecom.Call;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -39,11 +40,13 @@ MainActivity extends AppCompatActivity {
     private Chronometer timer;
 
     //resources
+    private final String TAG = MainActivity.class.getSimpleName();
     private BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
     private BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
 
     //CONSTANTS
-    private static final int REQUEST_ENABLE_BT = 1;
+    private static final int REQUEST_SELECT_DEVICE = 1;
+    private static final int REQUEST_ENABLE_BT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,14 +140,19 @@ MainActivity extends AppCompatActivity {
     private void enableBluetooth() {
 
         if (bluetoothAdapter == null) {
-            // Device doesn't support Bluetooth . Nothing can be done
+            // Device doesn't support Bluetooth .
+            Log.e(TAG, "Device dosen't support Bluetooth");
         }else if(!bluetoothAdapter.isEnabled()){
 
             //directly enable without asking for permission
-            bluetoothAdapter.enable();
+            //bluetoothAdapter.enable();
+            //request to enable permission
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 
         }else if (bluetoothAdapter.isEnabled()){
-           // Toast.makeText(this, "Bluetooth is already enabled!! " , Toast.LENGTH_SHORT).show();
+           // check if device connected
+
         }
     }
 
