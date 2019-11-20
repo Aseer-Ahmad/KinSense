@@ -2,15 +2,20 @@ package com.example.kinsense;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.SystemClock;
 import android.telecom.Call;
 import android.util.Log;
@@ -43,6 +48,8 @@ MainActivity extends AppCompatActivity {
     private final String TAG = MainActivity.class.getSimpleName();
     private BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
     private BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+    private BluetoothDevice bluetoothDevice = null;
+    private KinService kinService = null;
 
     //CONSTANTS
     private static final int REQUEST_SELECT_DEVICE = 1;
@@ -66,7 +73,7 @@ MainActivity extends AppCompatActivity {
             finish();
         }
 
-
+        service_init();
 
 
 
@@ -144,14 +151,12 @@ MainActivity extends AppCompatActivity {
             Log.e(TAG, "Device dosen't support Bluetooth");
         }else if(!bluetoothAdapter.isEnabled()){
 
-            //directly enable without asking for permission
-            //bluetoothAdapter.enable();
             //request to enable permission
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 
         }else if (bluetoothAdapter.isEnabled()){
-           // check if device connected
+           // check if device connected or go to DeviceControlActivity
 
         }
     }
@@ -163,14 +168,68 @@ MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_ENABLE_BT){
             if(resultCode != Activity.RESULT_OK){
 
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                Toast.makeText(this, "Cannot connect to Device. Bluetooth is not enabled!", Toast.LENGTH_SHORT).show();
             }else{
                 // bluetooth has been allowed by the user in the dialog
+                // got to DeviceControlActivity for result
+                Intent newIntent = new Intent(MainActivity.this, DeviceControlActivity.class);
+                startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+            }
+        }else if (requestCode == REQUEST_SELECT_DEVICE){
+            if(resultCode == Activity.RESULT_OK){
+                String deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
+                bluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
+
+                // connect to device using KinService .connect()
 
             }
         }
+    }
 
+    //Kinservice connected/disconnected
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            kinService = ((KinService .LocalBinder) service).getService();
+            Log.d(TAG, "in on Service Connected");
+            if(!kinService.init()) {
+                Log.e(TAG, "Unable to initialize ble");
+                finish();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            kinService = null;
+        }
+    };
+
+    private void service_init() {
+        Intent bindIntent = new Intent(this, KinService.class);
+        bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(  , makeGattUpdateIntentFilter());
+    }
+
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(KinService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(KinService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(KinService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(KinService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(KinService.DEVICE_DOES_NOT_SUPPORT_UART);
+        return intentFilter;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!bluetoothAdapter.isEnabled()){
+
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+
+        }
     }
 
     /*
