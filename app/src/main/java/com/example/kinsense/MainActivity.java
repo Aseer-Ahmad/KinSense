@@ -49,8 +49,8 @@ MainActivity extends AppCompatActivity {
 
     //resources
     private final String TAG = MainActivity.class.getSimpleName();
-    private BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
-    private BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+    private BluetoothManager bluetoothManager ;
+    private BluetoothAdapter bluetoothAdapter ;
     private BluetoothDevice bluetoothDevice = null;
     private KinService kinService = null;
 
@@ -66,6 +66,8 @@ MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
+        bluetoothAdapter = bluetoothManager.getAdapter();
         findComponenets();
 
         //getStatusSocket();
@@ -141,6 +143,8 @@ MainActivity extends AppCompatActivity {
         b1 = findViewById((R.id.button_bluetooth_enable));
         button_beginwork = findViewById(R.id.button_beginworkout);
         button_stopwork = findViewById(R.id.button_stopworkout);
+        button_beginwork.setEnabled(false);
+        button_beginwork.setText("Begin(Connect to device first)" );
         button_stopwork.setAlpha(0);
         rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
         icanchor = findViewById(R.id.icanchor);
@@ -161,7 +165,8 @@ MainActivity extends AppCompatActivity {
 
         }else if (bluetoothAdapter.isEnabled()){
            // check if device connected or else to DeviceControlActivity
-
+            Intent newIntent = new Intent(MainActivity.this, DeviceControlActivity.class);
+            startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
         }
     }
 

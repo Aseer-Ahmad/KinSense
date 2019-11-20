@@ -41,7 +41,7 @@ public class DeviceControlActivity extends AppCompatActivity {
     private BluetoothManager bluetoothManager;
     List<BluetoothDevice> bluetoothDeviceList = new ArrayList<>();
     DeviceAdapter deviceAdapter;
-    private Handler handler;
+    private Handler handler = new Handler();
 
     //constants & flags
     private static final long SCAN_PERIOD = 10000; //scanning for 10 seconds
@@ -66,6 +66,8 @@ public class DeviceControlActivity extends AppCompatActivity {
         }
 
         getBluetoothAdapter();
+
+        findComponents();
 
         deviceAdapter = new DeviceAdapter(this, bluetoothDeviceList);
         listViewDevices.setAdapter(deviceAdapter);
