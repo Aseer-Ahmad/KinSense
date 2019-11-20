@@ -80,11 +80,12 @@ public class DeviceControlActivity extends AppCompatActivity {
     //scan results for SDK < 21
     private  BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
-        public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+        public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     //add device to list
+                    addDevice(device, rssi);
                 }
             });
         }
@@ -94,15 +95,36 @@ public class DeviceControlActivity extends AppCompatActivity {
     private ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-            //add Device to list
+            super.onScanResult(callbackType, result);
+            //add device to list
+            addDevice(result.getDevice(), result.getRssi());
+
         }
 
         @Override
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
+            Log.e(TAG, "Scanning has Failed");
         }
     };
 
+    private void addDevice(BluetoothDevice device, int rssi){
+        boolean deviceInList = false;
+
+        for(BluetoothDevice device1 : bluetoothDeviceList){
+            if(device1.getAddress().equals(device.getAddress())){
+                deviceInList = true;
+                break;
+            }
+        }
+
+        devRssiValues.put(device.getAddress(), rssi);
+
+        if(!deviceInList){
+            bluetoothDeviceList.add(device);
+            deviceAdapter.notifyDataSetChanged();
+        }
+    }
 
 
     public void scanLeDevice(final boolean enable){
