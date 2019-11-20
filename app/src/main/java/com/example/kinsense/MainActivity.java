@@ -230,7 +230,6 @@ MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
                         String text = new String(txValue, StandardCharsets.UTF_8);
                         textView_showdata.setText(text);
                     }
