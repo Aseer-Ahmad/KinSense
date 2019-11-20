@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +29,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 public class
@@ -51,7 +54,10 @@ MainActivity extends AppCompatActivity {
     private BluetoothDevice bluetoothDevice = null;
     private KinService kinService = null;
 
-    //CONSTANTS
+    //CONSTANTS or flags
+    private static final int UART_PROFILE_CONNECTED = 20;
+    private static final int UART_PROFILE_DISCONNECTED = 21;
+    private int state = UART_PROFILE_DISCONNECTED;
     private static final int REQUEST_SELECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
 
@@ -76,8 +82,6 @@ MainActivity extends AppCompatActivity {
         service_init();
 
 
-
-
         //CallAPI class TESTING
         //later after testing set JSON data in constructor
         //execute the async method
@@ -95,8 +99,6 @@ MainActivity extends AppCompatActivity {
             public void onClick(View v) { // bluetooth enable button
 
                 enableBluetooth();
-                //Intent intent = new Intent(MainActivity.this, Scan.class);
-                //startActivity(intent);
             }
         });
 
@@ -111,7 +113,7 @@ MainActivity extends AppCompatActivity {
                 timer.setBase(SystemClock.elapsedRealtime());
                 timer.start();
 
-                //start gathering data from device
+                //start gathering data from device by writing to RXcharacteristic
             }
         });
 
@@ -124,6 +126,8 @@ MainActivity extends AppCompatActivity {
                 button_beginwork.setClickable(true);
                 //stop timer here
                 timer.stop();
+
+                //stop gathering data from device by writing to RXcharacteristic
             }
         });
     }
@@ -148,7 +152,7 @@ MainActivity extends AppCompatActivity {
 
         if (bluetoothAdapter == null) {
             // Device doesn't support Bluetooth .
-            Log.e(TAG, "Device dosen't support Bluetooth");
+            Log.e(TAG, "Device dosen't support Bluetooth. Can't help :(");
         }else if(!bluetoothAdapter.isEnabled()){
 
             //request to enable permission
@@ -156,7 +160,7 @@ MainActivity extends AppCompatActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 
         }else if (bluetoothAdapter.isEnabled()){
-           // check if device connected or go to DeviceControlActivity
+           // check if device connected or else to DeviceControlActivity
 
         }
     }
@@ -168,7 +172,7 @@ MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_ENABLE_BT){
             if(resultCode != Activity.RESULT_OK){
 
-                Toast.makeText(this, "Cannot connect to Device. Bluetooth is not enabled!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Cannot connect to Device. Bluetooth is not enabled! Try Again", Toast.LENGTH_SHORT).show();
             }else{
                 // bluetooth has been allowed by the user in the dialog
                 // got to DeviceControlActivity for result
@@ -181,10 +185,67 @@ MainActivity extends AppCompatActivity {
                 bluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
 
                 // connect to device using KinService .connect()
+                kinService.connect(deviceAddress);
 
             }
         }
     }
+
+    //use Broadcast Receiver to capture broadcast from Kinservice
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            //define for all kinService broadcast
+            if(action.equals(KinService.ACTION_GATT_CONNECTED)){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "Uart service connected");
+                        button_beginwork.setEnabled(true);
+                        state = UART_PROFILE_CONNECTED;
+                    }
+                });
+            }
+
+            if(action.equals(KinService.ACTION_GATT_DISCONNECTED)){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    Log.d(TAG, "Uart service disconnected");
+                    button_beginwork.setEnabled(false);
+                    state = UART_PROFILE_DISCONNECTED;
+                    }
+                });
+            }
+
+            if(action.equals(KinService.ACTION_GATT_SERVICES_DISCOVERED)){
+                // enable TXnotification
+                kinService.enableTXNotify();
+            }
+
+            if(action.equals(KinService.ACTION_DATA_AVAILABLE)){
+                final byte[] txValue = intent.getByteArrayExtra(KinService.EXTRA_DATA);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        String text = new String(txValue, StandardCharsets.UTF_8);
+                        textView_showdata.setText(text);
+                    }
+                });
+            }
+
+            if(action.equals(KinService.DEVICE_DOES_NOT_SUPPORT_UART)){
+                Log.e(TAG, "Device does not support Uart service.");
+                kinService.disconnect();
+            }
+
+
+
+        }
+    };
 
     //Kinservice connected/disconnected
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -208,7 +269,7 @@ MainActivity extends AppCompatActivity {
         Intent bindIntent = new Intent(this, KinService.class);
         bindService(bindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(  , makeGattUpdateIntentFilter());
+        LocalBroadcastManager.getInstance(this).registerReceiver( broadcastReceiver , makeGattUpdateIntentFilter());
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
