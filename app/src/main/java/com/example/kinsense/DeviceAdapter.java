@@ -55,8 +55,8 @@ public class DeviceAdapter extends BaseAdapter {
         TextView name = view.findViewById(R.id.textview_lename);
         TextView address = view.findViewById(R.id.textview_leaddress);
 
-        name.setText(bluetoothDevice.getName());
-        address.setText(bluetoothDevice.getAddress());
+        name.setText( bluetoothDevice.getName() );
+        address.setText( bluetoothDevice.getAddress());
 
         if(bluetoothDevice.getBondState() == BluetoothDevice.BOND_BONDED){
             paired.setText("Paired");

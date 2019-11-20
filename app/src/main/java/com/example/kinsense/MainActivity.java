@@ -39,7 +39,7 @@ MainActivity extends AppCompatActivity {
 
     //components
     private Button b1;
-    private TextView t1;
+    private TextView textView_connstatus;
     private TextView textView_showdata;
     private Button button_beginwork;
     private Button button_stopwork;
@@ -82,7 +82,6 @@ MainActivity extends AppCompatActivity {
         }
 
         service_init();
-
 
         //CallAPI class TESTING
         //later after testing set JSON data in constructor
@@ -138,7 +137,7 @@ MainActivity extends AppCompatActivity {
 
 
     private void findComponenets() {
-        t1 = findViewById(R.id.textview_connection_status); // connection status in mainActivity
+        textView_connstatus = findViewById(R.id.textview_connection_status); // connection status in mainActivity
         textView_showdata = findViewById(R.id.textview_showdata); // bottom text view to show data
         b1 = findViewById((R.id.button_bluetooth_enable));
         button_beginwork = findViewById(R.id.button_beginworkout);
@@ -189,6 +188,7 @@ MainActivity extends AppCompatActivity {
                 String deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
                 bluetoothDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
 
+                Toast.makeText(getApplicationContext(), deviceAddress, Toast.LENGTH_SHORT).show();
                 // connect to device using KinService .connect()
                 kinService.connect(deviceAddress);
 
@@ -209,6 +209,7 @@ MainActivity extends AppCompatActivity {
                     public void run() {
                         Log.d(TAG, "Uart service connected");
                         button_beginwork.setEnabled(true);
+                        textView_connstatus.setText("Connected to "+ bluetoothDevice.getName().toString() );
                         state = UART_PROFILE_CONNECTED;
                     }
                 });
@@ -291,30 +292,11 @@ MainActivity extends AppCompatActivity {
         super.onResume();
         if(!bluetoothAdapter.isEnabled()){
 
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            //Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            //startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 
         }
     }
 
-    /*
-    private void getStatusSocket() {
-        //Get data/status & socket from Scan.class intent
-        Intent intent = getIntent();
-        String status = intent.getStringExtra("Status");
-        String devicename = intent.getStringExtra("Device");
-        if(status !=null)
-            t1.setText("CONNECTED to "+devicename);
-
-
-        if(t1.getText().equals("NOT CONNECTED") ) {
-            button_beginwork.setEnabled(false);
-            button_beginwork.setText("BEGIN (first connect to device)");
-        }else{
-            button_beginwork.setEnabled(true);
-            button_beginwork.setText("BEGIN");
-        }
-    }
-    */
 
 }

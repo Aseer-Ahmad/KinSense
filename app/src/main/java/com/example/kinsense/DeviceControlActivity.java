@@ -1,7 +1,9 @@
 package com.example.kinsense;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothAdapter;
@@ -33,6 +35,7 @@ import java.util.Map;
 
 public class DeviceControlActivity extends AppCompatActivity {
 
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
     private final String TAG = DeviceControlActivity.class.getSimpleName();
 
     //resources
@@ -79,12 +82,14 @@ public class DeviceControlActivity extends AppCompatActivity {
                 BluetoothDevice device = bluetoothDeviceList.get(position);
                 scanLeDevice(false);
 
+
                 Bundle b = new Bundle();
-                b.putString(BluetoothDevice.EXTRA_DEVICE, device.getAddress());
+                b.putString(BluetoothDevice.EXTRA_DEVICE, device.getAddress() );
                 Intent intent = new Intent();
                 intent.putExtras(b);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
+
 
             }
         });
@@ -92,7 +97,7 @@ public class DeviceControlActivity extends AppCompatActivity {
         buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(scanning == false)
+                 if(scanning == false)
                     scanLeDevice(true);
             }
         });
