@@ -4,6 +4,7 @@
     <string name="scan_device">FIND YOUR DEVICE</string>
     <string name="paired_devices">PAIRED DEVICES</string>
     <string name="discovered_devices">DISCOVERED DEVICES</string>
+    <string name="paired_stat">Not Paired</string>
 
 
 </resources>

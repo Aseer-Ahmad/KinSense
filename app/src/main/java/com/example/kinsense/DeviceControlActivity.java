@@ -2,6 +2,7 @@ package com.example.kinsense;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -10,12 +11,15 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -66,6 +70,22 @@ public class DeviceControlActivity extends AppCompatActivity {
         deviceAdapter = new DeviceAdapter(this, bluetoothDeviceList);
         listViewDevices.setAdapter(deviceAdapter);
         //set item click listener
+        listViewDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // get device and send back to MainActivity using bundle and access in onActivityResult
+                BluetoothDevice device = bluetoothDeviceList.get(position);
+                scanLeDevice(false);
+
+                Bundle b = new Bundle();
+                b.putString(BluetoothDevice.EXTRA_DEVICE, device.getAddress());
+                Intent intent = new Intent();
+                intent.putExtras(b);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+
+            }
+        });
 
         buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,6 +180,7 @@ public class DeviceControlActivity extends AppCompatActivity {
 
         }else{
             scanning = false;
+            textViewScanningStatus.setText("Finished");
             if(Build.VERSION.SDK_INT < 21){
                 Log.d(TAG, "Scanning with BluetoohAdapter.LeScanCallBack < 21");
                 bluetoothAdapter.stopLeScan(leScanCallback);
@@ -189,5 +210,31 @@ public class DeviceControlActivity extends AppCompatActivity {
             finish();
             return;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        scanLeDevice(false);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        scanLeDevice(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        scanLeDevice(false);
     }
 }
