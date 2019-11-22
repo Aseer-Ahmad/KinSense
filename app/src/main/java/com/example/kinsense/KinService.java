@@ -31,6 +31,8 @@ public class KinService extends Service{
     private String bluetoothDeviceAddress;
     private BluetoothGatt bluetoothGatt;
     private int connectionState ;
+    //private BluetoothGattCharacteristic healthChar;  //test purpose
+
 
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
@@ -53,10 +55,10 @@ public class KinService extends Service{
                                                                  // does not support custom UART service
 
 
-    // custom services and characteristics
+    // hear rate service & char
     public static final UUID HEART_RATE_SERVICE_UUID = convertFromInteger(0x180D);  //test purpose
     public static final UUID HEART_RATE_MEASUREMENT_UUID = convertFromInteger(0x2A37); //test purpose
-    //---------
+    //-----custom services and characteristics
     public static final UUID CLIENT_CHARACTERISTIC_CONFIG_UUID  = convertFromInteger(0x2902) ;
     public static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e"); //Uart Service
     public static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
@@ -79,6 +81,7 @@ public class KinService extends Service{
         }
         return true;
     }
+
 
     public static UUID convertFromInteger(int i) {
 
@@ -224,6 +227,14 @@ public class KinService extends Service{
         bluetoothGatt = null;
     }
 
+    /*
+    public BluetoothGattCharacteristic gethealthchar(){
+        BluetoothGattService heartService = bluetoothGatt.getService(HEART_RATE_SERVICE_UUID);
+        healthChar = heartService.getCharacteristic(HEART_RATE_MEASUREMENT_UUID);
+        return healthChar;
+    }
+    */
+
     // read data from characteristic of a service
     public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
         if (bluetoothAdapter == null || bluetoothGatt == null) {
@@ -248,8 +259,8 @@ public class KinService extends Service{
         }else
             Log.d(TAG, "RX service discovered");
 
-        BluetoothGattCharacteristic TXchar = RXService.getCharacteristic(TX_CHAR_UUID);
-        if(TXchar == null){
+        BluetoothGattCharacteristic txchar = RXService.getCharacteristic(TX_CHAR_UUID);
+        if(txchar == null){
             Log.w(TAG, "TX characteristic not found! TRY RECONNECTING ");
             broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
@@ -258,8 +269,8 @@ public class KinService extends Service{
 
 
         Log.d(TAG, "Beginning to enable notify property");
-        bluetoothGatt.setCharacteristicNotification(TXchar, true);
-        BluetoothGattDescriptor bluetoothGattDescriptor = TXchar.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG_UUID);
+        bluetoothGatt.setCharacteristicNotification(txchar, true);
+        BluetoothGattDescriptor bluetoothGattDescriptor = txchar.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG_UUID);
         bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         bluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
         Log.d(TAG, "CCConfig written to descriptor");

@@ -7,6 +7,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     //components
     private Button b1;
+    private Button button_readdatainstance;
     private TextView textView_connstatus;
     private TextView textView_showdata;
     private Button button_beginwork;
@@ -91,6 +93,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void setButtonClikListeners() {
 
+        button_readdatainstance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //read data here from characteristic
+                Log.d(TAG, "getting data instance");
+                //kinService.readCharacteristic( kinService.gethealthchar() );
+            }
+        });
+
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // bluetooth enable button
@@ -136,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         textView_connstatus = findViewById(R.id.textview_connection_status); // connection status in mainActivity
         textView_showdata = findViewById(R.id.textview_showdata); // bottom text view to show data
         b1 = findViewById((R.id.button_bluetooth_enable));
+        button_readdatainstance = findViewById(R.id.button_readdataInstance);
         button_beginwork = findViewById(R.id.button_beginworkout);
         button_stopwork = findViewById(R.id.button_stopworkout);
         button_beginwork.setEnabled(false);
@@ -246,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-
         }
     };
 
@@ -296,5 +307,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(serviceConnection != null)
+            unbindService(serviceConnection);
+    }
 }

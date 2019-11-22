@@ -30,7 +30,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class CallAPI  extends AsyncTask<Void, Void, Void> {
 
-    private static String API = "https://app.kinsense.terenz.ai/process/";
+    private static final String API = "https://app.kinsense.terenz.ai/process/";
     private static Context context; // remove this later after testing
 
 
