@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -53,6 +54,10 @@ public class KinService extends Service{
 
 
     // custom services and characteristics
+    public static final UUID HEART_RATE_SERVICE_UUID = convertFromInteger(0x180D);
+    public static final UUID HEART_RATE_MEASUREMENT_UUID = convertFromInteger(0x2A37);
+
+    //---------
     public static final UUID CLIENT_CHARACTERISTIC_CONFIG_UUID  = convertFromInteger(0x2902) ;
     public static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
     public static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
@@ -100,13 +105,13 @@ public class KinService extends Service{
                 broadcastUpdate(ACTION_GATT_DISCONNECTED);
             }
 
-
         }
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+                Log.w(TAG, "onServicesDiscovered received: " + status);
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
             }
@@ -114,7 +119,8 @@ public class KinService extends Service{
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-           if(status == BluetoothGatt.GATT_SUCCESS){
+            Log.d(TAG, "onCharacteristic Read");
+            if(status == BluetoothGatt.GATT_SUCCESS){
                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
            }
         }
@@ -126,6 +132,7 @@ public class KinService extends Service{
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+            Log.d(TAG, "onCharacteristic Changed");
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
     };
@@ -142,6 +149,7 @@ public class KinService extends Service{
         final Intent intent = new Intent(action);
 
         if(TX_CHAR_UUID.equals(characteristic.getUuid())){
+            Log.d(TAG, "found characteristic "+characteristic.getValue().toString() ) ;
             intent.putExtra(EXTRA_DATA, characteristic.getValue() ); // retreive value in MainActivity in Broadcast Receiver
         }
 
@@ -238,19 +246,47 @@ public class KinService extends Service{
             Log.w(TAG, "RX service not found. TRY RECONNECTING !!");
             broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
-        }
+        }else
+            Log.d(TAG, "RX service discovered");
+
         BluetoothGattCharacteristic TXchar = RXService.getCharacteristic(TX_CHAR_UUID);
         if(TXchar == null){
             Log.w(TAG, "TX characteristic not found! TRY RECONNECTING ");
             broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
-        }
+        }else
+            Log.d(TAG, "TX characteristic found");
 
+
+        Log.d(TAG, "Beginning to enable notify property");
         bluetoothGatt.setCharacteristicNotification(TXchar, true);
         BluetoothGattDescriptor bluetoothGattDescriptor = TXchar.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG_UUID);
         bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         bluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
+        Log.d(TAG, "CCConfig written to descriptor");
+    }
 
+   /* public void enableNotify(){
+
+        BluetoothGattService HService = bluetoothGatt.getService(HEART_RATE_SERVICE_UUID);
+
+        BluetoothGattCharacteristic characteristic = HService.getCharacteristic(HEART_RATE_MEASUREMENT_UUID);
+        if(characteristic == null){
+            Log.w(TAG, "characteristic not found! TRY RECONNECTING ");
+            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            return;
+        }
+
+        Log.d(TAG, "Beginning to enable notify property");
+
+        bluetoothGatt.setCharacteristicNotification(characteristic, true);
+        BluetoothGattDescriptor bluetoothGattDescriptor = characteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG_UUID);
+        bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+        bluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
+    }
+*/
+    public void showMessage(String msg){
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
 

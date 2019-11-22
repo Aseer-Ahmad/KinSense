@@ -48,7 +48,7 @@ public class DeviceControlActivity extends AppCompatActivity {
 
     //constants & flags
     private static final long SCAN_PERIOD = 10000; //scanning for 10 seconds
-    private boolean scanning ;
+    private boolean scanning = false;
 
     //id components
     ListView listViewDevices;
@@ -72,7 +72,7 @@ public class DeviceControlActivity extends AppCompatActivity {
 
         findComponents();
 
-        deviceAdapter = new DeviceAdapter(this, bluetoothDeviceList);
+        deviceAdapter = new DeviceAdapter(this, bluetoothDeviceList, devRssiValues);
         listViewDevices.setAdapter(deviceAdapter);
         //set item click listener
         listViewDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -94,8 +94,10 @@ public class DeviceControlActivity extends AppCompatActivity {
             }
         });
 
+        //request real time permission to access Location
         ActivityCompat.requestPermissions(DeviceControlActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                 MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+
         buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +135,7 @@ public class DeviceControlActivity extends AppCompatActivity {
         @Override
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
-            Log.e(TAG, "Scanning has Failed");
+            Log.e(TAG, "Scanning has Failed.");
         }
     };
 
@@ -232,7 +234,7 @@ public class DeviceControlActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        scanLeDevice(false);
+        //scanLeDevice(false);
     }
 
     @Override

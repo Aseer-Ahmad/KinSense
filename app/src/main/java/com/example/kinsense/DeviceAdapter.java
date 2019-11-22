@@ -9,16 +9,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DeviceAdapter extends BaseAdapter {
 
-    Context context;
-    List<BluetoothDevice> listBluetoothDevices;
-    LayoutInflater layoutInflater;
+    private Context context;
+    private List<BluetoothDevice> listBluetoothDevices;
+    private Map<String, Integer> devRssiValues ;
+    private LayoutInflater layoutInflater;
 
-    public DeviceAdapter(Context context, List<BluetoothDevice> listBluetoothDevices) {
+    public DeviceAdapter(Context context, List<BluetoothDevice> listBluetoothDevices, Map<String, Integer> devRssiValues) {
         this.context = context;
+        this.devRssiValues = devRssiValues;
         layoutInflater = LayoutInflater.from(context);
         this.listBluetoothDevices = listBluetoothDevices;
     }
@@ -54,9 +58,14 @@ public class DeviceAdapter extends BaseAdapter {
         TextView paired = view.findViewById(R.id.textview_lepaired);
         TextView name = view.findViewById(R.id.textview_lename);
         TextView address = view.findViewById(R.id.textview_leaddress);
+        TextView rssi = view.findViewById(R.id.textview_rssi);
 
         name.setText( bluetoothDevice.getName() );
         address.setText( bluetoothDevice.getAddress());
+
+        byte rssiVal = (byte) devRssiValues.get(bluetoothDevice.getAddress()).intValue();
+        if(rssiVal!=0)
+            rssi.setText("Rssi = "+ String.valueOf(rssiVal));
 
         if(bluetoothDevice.getBondState() == BluetoothDevice.BOND_BONDED){
             paired.setText("Paired");

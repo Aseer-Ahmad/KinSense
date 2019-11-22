@@ -204,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         Log.d(TAG, "Uart service connected");
                         button_beginwork.setEnabled(true);
+                        button_beginwork.setText("BEGIN");
                         textView_connstatus.setText("Connected to "+ bluetoothDevice.getName().toString() );
                         state = UART_PROFILE_CONNECTED;
                     }
@@ -215,7 +216,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                     Log.d(TAG, "Uart service disconnected");
+                    Toast.makeText(getApplicationContext(), "No device connected! Please connect to appropriate Device", Toast.LENGTH_LONG).show();
                     button_beginwork.setEnabled(false);
+                    button_beginwork.setText("BEGIN(CONNECT TO DEVICE FIRST)");
                     state = UART_PROFILE_DISCONNECTED;
                     }
                 });
