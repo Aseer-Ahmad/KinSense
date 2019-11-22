@@ -30,7 +30,7 @@ public class KinService extends Service{
     private BluetoothAdapter bluetoothAdapter;
     private String bluetoothDeviceAddress;
     private BluetoothGatt bluetoothGatt;
-    private int connectionState = STATE_DISCONNECTED;
+    private int connectionState ;
 
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
@@ -54,12 +54,11 @@ public class KinService extends Service{
 
 
     // custom services and characteristics
-    public static final UUID HEART_RATE_SERVICE_UUID = convertFromInteger(0x180D);
-    public static final UUID HEART_RATE_MEASUREMENT_UUID = convertFromInteger(0x2A37);
-
+    public static final UUID HEART_RATE_SERVICE_UUID = convertFromInteger(0x180D);  //test purpose
+    public static final UUID HEART_RATE_MEASUREMENT_UUID = convertFromInteger(0x2A37); //test purpose
     //---------
     public static final UUID CLIENT_CHARACTERISTIC_CONFIG_UUID  = convertFromInteger(0x2902) ;
-    public static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+    public static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e"); //Uart Service
     public static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
     public static final UUID TX_CHAR_UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
 
@@ -265,8 +264,8 @@ public class KinService extends Service{
         bluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
         Log.d(TAG, "CCConfig written to descriptor");
     }
-
-   /* public void enableNotify(){
+/*
+    public void enableNotify(){
 
         BluetoothGattService HService = bluetoothGatt.getService(HEART_RATE_SERVICE_UUID);
 
