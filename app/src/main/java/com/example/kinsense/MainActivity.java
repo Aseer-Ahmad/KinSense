@@ -269,8 +269,8 @@ public class MainActivity extends AppCompatActivity {
                              writeJSONExternal( stringdata );
 
                              //make API call
-                             CallAPI callAPI = new CallAPI( getApplicationContext(), dateinstance );  // sending context to test with JSON data in assets
-                             callAPI.execute();  // to run the doInBackground method of AsyncTask
+                             //CallAPI callAPI = new CallAPI( getApplicationContext(), dateinstance );  // sending context to test with JSON data in assets
+                             //callAPI.execute();  // to run the doInBackground method of AsyncTask
 
                              Log.d(TAG, "final string data"+ stringdata);
                         }
