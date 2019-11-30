@@ -84,7 +84,8 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
             JSONArray jsonArray = new JSONArray();
             String root = context.getExternalFilesDir(null).getAbsolutePath();
             File file = new File(root + "/test.json");
-            Date date = new SimpleDateFormat("a hh:mm:ss").parse(dateinstance);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("a hh:mm:ss")
+            Date date = dateFormat.parse(dateinstance);
 
             int count = 1;
             try {
@@ -101,7 +102,7 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
                         }
                         JSONObject json = new JSONObject(s);
                         json.put("index", count);
-                        json.put("Time", date.toString() );
+                        json.put("Time", dateFormat.format(date).toString() );
                         count +=1;
 
                         //add to JsonArray
