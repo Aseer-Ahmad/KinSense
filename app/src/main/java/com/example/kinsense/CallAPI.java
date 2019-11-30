@@ -84,7 +84,7 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
             JSONArray jsonArray = new JSONArray();
             String root = context.getExternalFilesDir(null).getAbsolutePath();
             File file = new File(root + "/test.json");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("a hh:mm:ss")
+            SimpleDateFormat dateFormat = new SimpleDateFormat("a hh:mm:ss");
             Date date = dateFormat.parse(dateinstance);
 
             int count = 1;
@@ -133,7 +133,6 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
                 connection.setDoInput(true);
 
                 JSONArray jsonArray = getJsonData();
-
 
                 JSONObject json = new JSONObject();
                 json.put("data", jsonArray);
