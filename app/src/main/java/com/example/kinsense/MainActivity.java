@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 button_stopwork.animate().alpha(1).translationY(-80).setDuration(400).start();
                 button_beginwork.animate().alpha(0).setDuration(400).start();
                 button_beginwork.setClickable(false);
+                button_stopwork.setClickable(true);
                 //set timer here
                 timer.setBase(SystemClock.elapsedRealtime());
                 timer.start();
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 button_beginwork.animate().alpha(1).setDuration(400).start();
                 button_stopwork.animate().alpha(0).translationY(80).setDuration(400).start();
                 button_beginwork.setClickable(true);
+                button_stopwork.setClickable(false);
                 //stop timer here
                 timer.stop();
 
@@ -134,8 +136,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     private void findComponenets() {
@@ -242,15 +242,15 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         String text = new String(txValue, StandardCharsets.UTF_8);
 
-                        if( !button_beginwork.isEnabled() && button_stopwork.isEnabled()){
+                        if( !button_beginwork.isClickable() && button_stopwork.isClickable() ){
                             //start capturing data
+                            Log.d(TAG, "string builder appending");
                             sb.append(text);
-                        }else if( !button_stopwork.isEnabled() && button_beginwork.isEnabled() ){
+                        }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() ){
                             //stop capturing data
                              stringdata = sb.toString();
-                             Log.d(TAG, "big string coming"+ stringdata);
+                            Log.d(TAG, "big string coming"+ stringdata);
                         }
-
                         //textView_showdata.setText(text);
                     }
                 });
