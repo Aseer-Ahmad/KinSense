@@ -31,14 +31,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
     //components
     private Button b1;
-    private Button button_readdatainstance;
     private TextView textView_connstatus;
     private TextView textView_showdata;
     private Button button_beginwork;
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter ;
     private BluetoothDevice bluetoothDevice = null;
     private KinService kinService = null;
+    private StringBuilder sb = new StringBuilder();
+    private String stringdata;
 
     //CONSTANTS or flags
     private static final int UART_PROFILE_CONNECTED = 20;
@@ -92,15 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setButtonClikListeners() {
-
-        button_readdatainstance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //read data here from characteristic
-                Log.d(TAG, "getting data instance");
-                //kinService.readCharacteristic( kinService.gethealthchar() );
-            }
-        });
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
         textView_connstatus = findViewById(R.id.textview_connection_status); // connection status in mainActivity
         textView_showdata = findViewById(R.id.textview_showdata); // bottom text view to show data
         b1 = findViewById((R.id.button_bluetooth_enable));
-        button_readdatainstance = findViewById(R.id.button_readdataInstance);
         button_beginwork = findViewById(R.id.button_beginworkout);
         button_stopwork = findViewById(R.id.button_stopworkout);
         button_beginwork.setEnabled(false);
@@ -247,7 +241,17 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         String text = new String(txValue, StandardCharsets.UTF_8);
-                        textView_showdata.setText(text);
+
+                        if( !button_beginwork.isEnabled() && button_stopwork.isEnabled()){
+                            //start capturing data
+                            sb.append(text);
+                        }else if( !button_stopwork.isEnabled() && button_beginwork.isEnabled() ){
+                            //stop capturing data
+                             stringdata = sb.toString();
+                             Log.d(TAG, "big string coming"+ stringdata);
+                        }
+
+                        //textView_showdata.setText(text);
                     }
                 });
             }

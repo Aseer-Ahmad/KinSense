@@ -92,36 +92,17 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        >
+
 
         <TextView
-            android:layout_marginLeft="150dp"
             android:id="@+id/textview_showdata"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginTop="5dp"
+            android:gravity="center"
             android:text="Data Display here"
             android:textColor="@color/colorWhite" />
 
-        <View
-            android:layout_width="218dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/button_readdataInstance"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/btnwhite"
-            android:text="Read" />
-
-    </LinearLayout>
 
 </LinearLayout>

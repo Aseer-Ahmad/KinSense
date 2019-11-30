@@ -151,7 +151,7 @@ public class KinService extends Service{
         final Intent intent = new Intent(action);
 
         if(TX_CHAR_UUID.equals(characteristic.getUuid())){
-            Log.d(TAG, "found characteristic "+characteristic.getValue().toString() ) ;
+            Log.d(TAG, "found characteristic " ) ;
             intent.putExtra(EXTRA_DATA, characteristic.getValue() ); // retreive value in MainActivity in Broadcast Receiver
         }
 
