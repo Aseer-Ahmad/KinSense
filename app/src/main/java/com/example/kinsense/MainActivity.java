@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
         //later after testing set JSON data in constructor
         //execute the async method
         //getResponse and send it to a new activity
-        //CallAPI callAPI = new CallAPI(this);  // sending context to test with JSON data in assets
-        //callAPI.execute();  // to run the doInBackground method of AsyncTask
+        CallAPI callAPI = new CallAPI(this);  // sending context to test with JSON data in assets
+        callAPI.execute();  // to run the doInBackground method of AsyncTask
 
     }
 
@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                 button_stopwork.setClickable(false);
                 //stop timer here
                 timer.stop();
-
                 //stop gathering data from device by writing to RXcharacteristic
             }
         });
@@ -252,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "big string coming"+ stringdata);
                         }
                         //textView_showdata.setText(text);
+
                     }
                 });
             }
