@@ -30,6 +30,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
@@ -55,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter ;
     private BluetoothDevice bluetoothDevice = null;
     private KinService kinService = null;
-    private StringBuilder sb = new StringBuilder();
+    private StringBuilder sb ;
     private String stringdata;
 
     //CONSTANTS or flags
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 button_beginwork.animate().alpha(0).setDuration(400).start();
                 button_beginwork.setClickable(false);
                 button_stopwork.setClickable(true);
+                sb = new StringBuilder();
                 //set timer here
                 timer.setBase(SystemClock.elapsedRealtime());
                 timer.start();
@@ -248,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
                         }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() ){
                             //stop capturing data
                              stringdata = sb.toString();
+                             writeJSONExternal( stringdata );
                             Log.d(TAG, "big string coming"+ stringdata);
                         }
                         //textView_showdata.setText(text);
@@ -264,6 +270,26 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    private  void writeJSONExternal(String json) {
+
+        String root = getExternalFilesDir(null).getAbsolutePath();
+        File file = new File(root + "/test.json");
+
+        FileOutputStream fos ;
+
+        try {
+            fos = new FileOutputStream(file);//context.openFileOutput("test.txt", Context.MODE_PRIVATE);
+            fos.write(json.getBytes());
+            Log.d(TAG, "file written to "+ getExternalFilesDir(null) + "/test.txt");
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e1){
+            e1.printStackTrace();
+        }
+
+    }
 
     //Kinservice connected/disconnected
     private ServiceConnection serviceConnection = new ServiceConnection() {

@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 
 
@@ -16,14 +17,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -40,7 +45,7 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
     private static Context context; // remove this later after testing
 
 
-        public CallAPI(Context context) {
+    public CallAPI(Context context) {
             this.context = context;
         }
 
@@ -49,15 +54,18 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
 
         }
 
-        public static String getData () {
+        /*public static String getData () {
             String json = null;
+            byte[] buffer =null;
             try {
                 InputStream is = context.getAssets().open("TestJson.json");
                 int size = is.available();
-                byte[] buffer = new byte[size];
+                Log.d(TAG, "json size: "+size);
+                buffer = new byte[size];
                 is.read(buffer);
                 is.close();
                 json = new String(buffer, "UTF-8");
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -65,9 +73,42 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
             return json;
 
         }
+        */
+
+        public static JSONArray getJsonData(){
+            String root = context.getExternalFilesDir(null).getAbsolutePath();
+            File file = new File(root + "/test.json");
+            int count = 1;
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String s;
+                while( (s = br.readLine()) != null ){
+                    int len = s.length();
+                    if ( len < 62 )
+                        continue;
+                    else{
+                        if(count > 32)
+                            count = 1;
+
+                        JSONObject json = new JSONObject(s);
+                        json.put("index", count);
+                        json.put("time", );
+                        count +=1;
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e1){
+                e1.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
-        @Override
+        }
+
+
+    @Override
         protected Void doInBackground (Void...voids){
 
             try {
@@ -78,10 +119,14 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
                 connection.setDoOutput(true);
                 connection.setDoInput(true);
 
-                JSONArray jsonArray = new JSONArray(getData());
+                JSONArray jsonArray = new JSONArray( getData() );
+
 
                 JSONObject json = new JSONObject();
                 json.put("data", jsonArray);
+
+
+                Log.d(TAG, "request JSON last object: " + jsonArray.get(jsonArray.length()-1));
 
                 //write json to call
                 DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
@@ -90,10 +135,11 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
                 dataOutputStream.flush();
 
                 int responseCode = connection.getResponseCode();
-                Log.d(TAG, "Response Code: "+String.valueOf(responseCode));
+                Log.d(TAG, "Response Code: "+  responseCode );
 
-                String line;
+
                 if(responseCode == 200){
+                    String line;
                     br = new BufferedReader( new InputStreamReader(connection.getInputStream()) );
                     while( (line = br.readLine()) != null){
                         if(line.isEmpty())
