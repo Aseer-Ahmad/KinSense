@@ -56,7 +56,6 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
 
 
         public void getResponse(){
-
         }
 
         /*public static String getData () {
@@ -80,6 +79,26 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
         }
         */
 
+    private  void writeJSONExternal(String json) {
+
+        String root = context.getExternalFilesDir(null).getAbsolutePath();
+        File file = new File(root + "/testParsed.json");
+
+        FileOutputStream fos ;
+
+        try {
+            fos = new FileOutputStream(file);//context.openFileOutput("test.txt", Context.MODE_PRIVATE);
+            fos.write(json.getBytes());
+            Log.d(TAG, "file written to "+ context.getExternalFilesDir(null) + "/testParsed.json");
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e1){
+            e1.printStackTrace();
+        }
+
+    }
+
         public static JSONArray getJsonData() throws ParseException {
             JSONArray jsonArray = new JSONArray();
             String root = context.getExternalFilesDir(null).getAbsolutePath();
@@ -93,16 +112,15 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
                 String s;
                 while( (s = br.readLine()) != null ){
                     int len = s.length();
-                    if ( len < 62 )
-                        continue;
-                    else{
-                        if(count > 32) {
+                    if ( len > 72 && len <80 ){
+                         if(count > 32) {
                             count = 1;
                             date.setTime( date.getTime() + 1000);
                         }
+
                         JSONObject json = new JSONObject(s);
                         json.put("index", count);
-                        json.put("Time", dateFormat.format(date).toString() );
+                        json.put("Time", dateFormat.format(date) );
                         count +=1;
 
                         //add to JsonArray
@@ -137,8 +155,9 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
                 JSONObject json = new JSONObject();
                 json.put("data", jsonArray);
 
+                writeJSONExternal( json.toString() );
 
-                Log.d(TAG, "request JSON last object: " + jsonArray.get(jsonArray.length()-1));
+                Log.d(TAG, "request JSONArray object size: " + jsonArray.length() );
 
                 //write json to call
                 DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());

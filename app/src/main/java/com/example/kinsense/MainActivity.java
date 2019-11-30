@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
 
                         if( !button_beginwork.isClickable() && button_stopwork.isClickable() ){
                             //start capturing data
-                            Log.d(TAG, "string builder appending");
+                            //Log.d(TAG, "string builder appending");
                             sb.append(text);
                         }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() ){
 
@@ -269,10 +269,10 @@ public class MainActivity extends AppCompatActivity {
                              writeJSONExternal( stringdata );
 
                              //make API call
-                             //CallAPI callAPI = new CallAPI( getApplicationContext(), dateinstance );  // sending context to test with JSON data in assets
-                             //callAPI.execute();  // to run the doInBackground method of AsyncTask
+                             CallAPI callAPI = new CallAPI( getApplicationContext(), dateinstance );  // sending context to test with JSON data in assets
+                             callAPI.execute();  // to run the doInBackground method of AsyncTask
 
-                             Log.d(TAG, "final string data"+ stringdata);
+                             Log.d(TAG, "final string data length: "+ stringdata.length());
                         }
                         //textView_showdata.setText(text);
                     }
