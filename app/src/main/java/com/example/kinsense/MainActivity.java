@@ -37,8 +37,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private KinService kinService = null;
     private StringBuilder sb ;
     private String stringdata;
+    public String dateinstance;
 
     //CONSTANTS or flags
     private static final int UART_PROFILE_CONNECTED = 20;
@@ -93,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
         //later after testing set JSON data in constructor
         //execute the async method
         //getResponse and send it to a new activity
-        CallAPI callAPI = new CallAPI(this);  // sending context to test with JSON data in assets
-        callAPI.execute();  // to run the doInBackground method of AsyncTask
+
 
     }
 
@@ -118,6 +122,14 @@ public class MainActivity extends AppCompatActivity {
                 button_beginwork.setClickable(false);
                 button_stopwork.setClickable(true);
                 sb = new StringBuilder();
+
+                //capture local system time
+
+                DateFormat dateFormat = new SimpleDateFormat("a hh:mm:ss");
+                Calendar cal = Calendar.getInstance();
+                Date date=cal.getTime();
+                dateinstance = dateFormat.format(date);
+
                 //set timer here
                 timer.setBase(SystemClock.elapsedRealtime());
                 timer.start();
@@ -251,13 +263,18 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "string builder appending");
                             sb.append(text);
                         }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() ){
+
                             //stop capturing data
                              stringdata = sb.toString();
                              writeJSONExternal( stringdata );
-                            Log.d(TAG, "big string coming"+ stringdata);
+
+                             //make API call
+                             CallAPI callAPI = new CallAPI( getApplicationContext(), dateinstance );  // sending context to test with JSON data in assets
+                             callAPI.execute();  // to run the doInBackground method of AsyncTask
+
+                             Log.d(TAG, "final string data"+ stringdata);
                         }
                         //textView_showdata.setText(text);
-
                     }
                 });
             }
@@ -281,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             fos = new FileOutputStream(file);//context.openFileOutput("test.txt", Context.MODE_PRIVATE);
             fos.write(json.getBytes());
-            Log.d(TAG, "file written to "+ getExternalFilesDir(null) + "/test.txt");
+            Log.d(TAG, "file written to "+ getExternalFilesDir(null) + "/test.json");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

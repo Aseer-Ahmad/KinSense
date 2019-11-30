@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.JsonReader;
 import android.util.Log;
 
 
@@ -32,6 +33,9 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -41,12 +45,13 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
     private static final String API = "https://app.kinsense.terenz.ai/process/";
     private static final String TAG = CallAPI.class.getSimpleName();
     public BufferedReader br ;
-
+    public static String dateinstance ;
     private static Context context; // remove this later after testing
 
 
-    public CallAPI(Context context) {
+    public CallAPI(Context context, String dateinstance) {
             this.context = context;
+            this.dateinstance = dateinstance;
         }
 
 
@@ -75,9 +80,12 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
         }
         */
 
-        public static JSONArray getJsonData(){
+        public static JSONArray getJsonData() throws ParseException {
+            JSONArray jsonArray = new JSONArray();
             String root = context.getExternalFilesDir(null).getAbsolutePath();
             File file = new File(root + "/test.json");
+            Date date = new SimpleDateFormat("a hh:mm:ss").parse(dateinstance);
+
             int count = 1;
             try {
                 BufferedReader br = new BufferedReader(new FileReader(file));
@@ -87,13 +95,17 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
                     if ( len < 62 )
                         continue;
                     else{
-                        if(count > 32)
+                        if(count > 32) {
                             count = 1;
-
+                            date.setTime( date.getTime() + 1000);
+                        }
                         JSONObject json = new JSONObject(s);
                         json.put("index", count);
-                        json.put("time", );
+                        json.put("Time", date.toString() );
                         count +=1;
+
+                        //add to JsonArray
+                        jsonArray.put(json);
                     }
                 }
             } catch (FileNotFoundException e) {
@@ -104,7 +116,7 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
                 e.printStackTrace();
             }
 
-
+            return jsonArray;
         }
 
 
@@ -119,7 +131,7 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
                 connection.setDoOutput(true);
                 connection.setDoInput(true);
 
-                JSONArray jsonArray = new JSONArray( getData() );
+                JSONArray jsonArray = getJsonData();
 
 
                 JSONObject json = new JSONObject();
