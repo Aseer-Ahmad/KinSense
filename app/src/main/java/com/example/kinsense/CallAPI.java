@@ -94,15 +94,12 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
                 connection.setDoOutput(true);
                 connection.setDoInput(true);
 
-                long startTime = System.nanoTime();
-                long endTime = System.nanoTime();
-
-                Log.d(TAG, "time taken to read JSON data from file: "+ (endTime - startTime)/1000000 + " ms");
+                //long startTime = System.nanoTime();
+                //long endTime = System.nanoTime();
+                //Log.d(TAG, "time taken to read JSON data from file: "+ (endTime - startTime)/1000000 + " ms");
 
                 JSONObject json = new JSONObject();
                 json.put("data", jsonArray);
-
-                //writeJSONExternal( jsonArray.toString() ); //write to validate
 
                 Log.d(TAG, "request JSONArray object size: " + json );
 

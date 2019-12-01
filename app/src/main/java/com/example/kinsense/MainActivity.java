@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     private int state = UART_PROFILE_DISCONNECTED;
     private static final int REQUEST_SELECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
+    private static boolean FLAG_STOPPED = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,8 +273,8 @@ public class MainActivity extends AppCompatActivity {
                             //start capturing data
                             //Log.d(TAG, "string builder appending");
                             sb.append(text);
-                        }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() ){
-
+                        }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() && FLAG_STOPPED == false ){
+                             FLAG_STOPPED = true ;
                             //stop capturing data
                              stringdata = sb.toString();
                              writeJSONExternal( stringdata, "test" );
