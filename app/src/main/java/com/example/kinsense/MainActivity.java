@@ -30,14 +30,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
         //later after testing set JSON data in constructor
         //execute the async method
         //getResponse and send it to a new activity
+        //CallAPI callAPI = new CallAPI( getApplicationContext(), dateinstance );  // sending context to test with JSON data in assets
+        //callAPI.execute();  // to run the doInBackground method of AsyncTask
 
 
     }
@@ -253,6 +262,7 @@ public class MainActivity extends AppCompatActivity {
 
             if(action.equals(KinService.ACTION_DATA_AVAILABLE)){
                 final byte[] txValue = intent.getByteArrayExtra(KinService.EXTRA_DATA);
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -266,10 +276,12 @@ public class MainActivity extends AppCompatActivity {
 
                             //stop capturing data
                              stringdata = sb.toString();
-                             writeJSONExternal( stringdata );
+                             writeJSONExternal( stringdata, "test" );
+                             JSONArray jsonArray = getJsonExternalParsed();
+                             writeJSONExternal( jsonArray.toString(), "testParsed" );
 
-                             //make API call
-                             CallAPI callAPI = new CallAPI( getApplicationContext(), dateinstance );  // sending context to test with JSON data in assets
+                            //make API call
+                             CallAPI callAPI = new CallAPI( getApplicationContext(), dateinstance, jsonArray);  // sending context to test with JSON data in assets
                              callAPI.execute();  // to run the doInBackground method of AsyncTask
 
                              Log.d(TAG, "final string data length: "+ stringdata.length());
@@ -288,17 +300,17 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private  void writeJSONExternal(String json) {
+    private void writeJSONExternal(String json, String filename) {
 
         String root = getExternalFilesDir(null).getAbsolutePath();
-        File file = new File(root + "/test.json");
+        File file = new File(root + "/"+filename+".json");
 
         FileOutputStream fos ;
 
         try {
             fos = new FileOutputStream(file);//context.openFileOutput("test.txt", Context.MODE_PRIVATE);
-            fos.write(json.getBytes());
-            Log.d(TAG, "file written to "+ getExternalFilesDir(null) + "/test.json");
+            fos.write( json.getBytes() );
+            Log.d(TAG, "file written to "+ getExternalFilesDir(null) + "/"+filename+".json");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -306,6 +318,52 @@ public class MainActivity extends AppCompatActivity {
             e1.printStackTrace();
         }
 
+    }
+
+    public JSONArray getJsonExternalParsed(){
+        JSONArray jsonArray = new JSONArray();
+
+        String root = getExternalFilesDir(null).getAbsolutePath();
+        File file = new File(root + "/test.json");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("a hh:mm:ss");
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateinstance);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        int count = 1;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String s;
+            while( (s = br.readLine()) != null ){
+                int len = s.length();
+                if ( len > 72 && len <80 ){
+                    if(count > 32) {
+                        count = 1;
+                        date.setTime( date.getTime() + 1000);
+                    }
+
+                    JSONObject json = new JSONObject(s);
+                    json.put("index", count);
+                    json.put("Time", dateFormat.format(date) );
+                    count +=1;
+
+                    //  add to JsonArray
+                    jsonArray.put(json);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e1){
+            e1.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonArray;
     }
 
     //Kinservice connected/disconnected

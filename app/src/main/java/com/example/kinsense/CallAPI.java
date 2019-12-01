@@ -33,6 +33,7 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,20 +44,22 @@ import javax.net.ssl.HttpsURLConnection;
 public class CallAPI  extends AsyncTask<Void, Void, Void> {
 
     private static final String API = "https://app.kinsense.terenz.ai/process/";
+    //private static final String API = "https://42337ae5.ngrok.io/process/";
+
     private static final String TAG = CallAPI.class.getSimpleName();
     public BufferedReader br ;
     public static String dateinstance ;
     private static Context context; // remove this later after testing
+    private static JSONArray jsonArray;
 
 
-    public CallAPI(Context context, String dateinstance) {
+    public CallAPI(Context context, String dateinstance, JSONArray  jsonArray) {
             this.context = context;
             this.dateinstance = dateinstance;
+            this.jsonArray = jsonArray;
         }
 
 
-        public void getResponse(){
-        }
 
         /*public static String getData () {
             String json = null;
@@ -78,71 +81,12 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
 
         }
         */
-
-    private  void writeJSONExternal(String json) {
-
-        String root = context.getExternalFilesDir(null).getAbsolutePath();
-        File file = new File(root + "/testParsed.json");
-
-        FileOutputStream fos ;
-
-        try {
-            fos = new FileOutputStream(file);//context.openFileOutput("test.txt", Context.MODE_PRIVATE);
-            fos.write(json.getBytes());
-            Log.d(TAG, "file written to "+ context.getExternalFilesDir(null) + "/testParsed.json");
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e1){
-            e1.printStackTrace();
-        }
-
-    }
-
-        public static JSONArray getJsonData() throws ParseException {
-            JSONArray jsonArray = new JSONArray();
-            String root = context.getExternalFilesDir(null).getAbsolutePath();
-            File file = new File(root + "/test.json");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("a hh:mm:ss");
-            Date date = dateFormat.parse(dateinstance);
-
-            int count = 1;
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                String s;
-                while( (s = br.readLine()) != null ){
-                    int len = s.length();
-                    if ( len > 72 && len <80 ){
-                         if(count > 32) {
-                            count = 1;
-                            date.setTime( date.getTime() + 1000);
-                        }
-
-                        JSONObject json = new JSONObject(s);
-                        json.put("index", count);
-                        json.put("Time", dateFormat.format(date) );
-                        count +=1;
-
-                        //add to JsonArray
-                        jsonArray.put(json);
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e1){
-                e1.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return jsonArray;
-        }
-
-
     @Override
         protected Void doInBackground (Void...voids){
 
             try {
+                Log.d(TAG, "beginning async task... ");
+
                 URL url = new URL(API);
                 HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
@@ -150,20 +94,27 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
                 connection.setDoOutput(true);
                 connection.setDoInput(true);
 
-                JSONArray jsonArray = getJsonData();
+                long startTime = System.nanoTime();
+                long endTime = System.nanoTime();
+
+                Log.d(TAG, "time taken to read JSON data from file: "+ (endTime - startTime)/1000000 + " ms");
 
                 JSONObject json = new JSONObject();
                 json.put("data", jsonArray);
 
-                writeJSONExternal( json.toString() );
+                //writeJSONExternal( jsonArray.toString() ); //write to validate
 
-                Log.d(TAG, "request JSONArray object size: " + jsonArray.length() );
+                Log.d(TAG, "request JSONArray object size: " + json );
 
                 //write json to call
-                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-                dataOutputStream.writeBytes(json.toString());
+                //BufferedWriter  dataOutputStream = new BufferedWriter( new OutputStreamWriter(connection.getOutputStream() , StandardCharsets.UTF_8));
+                //dataOutputStream.write( json.toString() );
+
+                DataOutputStream dataOutputStream = new DataOutputStream( connection.getOutputStream());
+                dataOutputStream.writeBytes( json.toString() );
                 dataOutputStream.close();
                 dataOutputStream.flush();
+
 
                 int responseCode = connection.getResponseCode();
                 Log.d(TAG, "Response Code: "+  responseCode );
@@ -184,7 +135,7 @@ public class CallAPI  extends AsyncTask<Void, Void, Void> {
 
             } catch (Exception e) {
 
-                Log.d("Exception occured: ", "GOD KNOWS");
+                Log.d(TAG, "GOD KNOWS what happened. HTTP Connection exception");
                 e.printStackTrace();
             }
         return null;
