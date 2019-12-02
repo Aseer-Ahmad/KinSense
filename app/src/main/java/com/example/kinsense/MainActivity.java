@@ -26,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     //components
     private Button b1;
+    private Button button_testcall;
     private TextView textView_connstatus;
     private TextView textView_showdata;
     private Button button_beginwork;
@@ -102,19 +104,25 @@ public class MainActivity extends AppCompatActivity {
 
         service_init();
 
-        //CallAPI class TESTING
-        //later after testing set JSON data in constructor
-        //execute the async method
-        //getResponse and send it to a new activity
-        //CallAPI callAPI = new CallAPI( getApplicationContext(), dateinstance );  // sending context to test with JSON data in assets
-        //callAPI.execute();  // to run the doInBackground method of AsyncTask
-
 
     }
 
 
     private void setButtonClikListeners() {
 
+       /* button_testcall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //CallAPI class TESTING
+                //later after testing set JSON data in constructor
+                //execute the async method
+                //getResponse and send it to a new activity
+                CallAPI callAPI = new CallAPI( MainActivity.this, dateinstance, new JSONArray() ); // sending context to test with JSON data in assets
+                callAPI.execute();  // to run the doInBackground method of AsyncTask
+
+            }
+        });
+        */
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // bluetooth enable button
@@ -165,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void findComponenets() {
+        button_testcall = findViewById(R.id.button_testcall);
         textView_connstatus = findViewById(R.id.textview_connection_status); // connection status in mainActivity
         textView_showdata = findViewById(R.id.textview_showdata); // bottom text view to show data
         b1 = findViewById((R.id.button_bluetooth_enable));
