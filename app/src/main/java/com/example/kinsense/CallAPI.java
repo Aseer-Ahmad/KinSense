@@ -154,12 +154,11 @@ public class CallAPI  extends AsyncTask<Void, Void, String> {
                     }
                 }
 
-
                 connection.disconnect();
 
             } catch (Exception e) {
 
-                Log.d(TAG, "GOD KNOWS what happened. HTTP Connection exception");
+                Log.d(TAG, "GOD KNOWS what happened.");
                 e.printStackTrace();
             }
         return null;
