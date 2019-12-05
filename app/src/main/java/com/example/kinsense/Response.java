@@ -2,16 +2,18 @@ package com.example.kinsense;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-public class Response extends AppCompatActivity {
+public class Response extends Activity {
 
 
     private String response;
     private TextView textView;
+
     private final String TAG = Response.class.getSimpleName();
 
    @Override

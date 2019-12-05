@@ -53,7 +53,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     //components
     private Button b1;
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG,"activity created");
 
         bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
@@ -110,14 +111,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setButtonClikListeners() {
 
-       /* button_testcall.setOnClickListener(new View.OnClickListener() {
+        /*
+        button_testcall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //CallAPI class TESTING
-                //later after testing set JSON data in constructor
-                //execute the async method
                 //getResponse and send it to a new activity
-                CallAPI callAPI = new CallAPI( MainActivity.this, dateinstance, new JSONArray() ); // sending context to test with JSON data in assets
+                CallAPI callAPI = new CallAPI( MainActivity.this,  stringdata ); // sending context to test with JSON data in assets
                 callAPI.execute();  // to run the doInBackground method of AsyncTask
 
             }
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-
+            int count = 0 ;
             //define for all kinService broadcast
             if(action.equals(KinService.ACTION_GATT_CONNECTED)){
                 runOnUiThread(new Runnable() {
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "Uart service connected");
                         button_beginwork.setEnabled(true);
                         button_beginwork.setText("BEGIN");
-                        textView_connstatus.setText("Connected to "+ bluetoothDevice.getName().toString() );
+                        textView_connstatus.setText("Connected to "+ bluetoothDevice.getName() );
                         state = UART_PROFILE_CONNECTED;
                     }
                 });
@@ -282,16 +282,21 @@ public class MainActivity extends AppCompatActivity {
                             //start capturing data
                             //Log.d(TAG, "string builder appending");
                             sb.append(text);
+
                         }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() && FLAG_STOPPED == false ){
                              FLAG_STOPPED = true ;
                             //stop capturing data
                              stringdata = sb.toString();
+
+                             /* used to write data to a file in external storage
+                             // and later parse it to send to API
                              writeJSONExternal( stringdata, "test" );
                              JSONArray jsonArray = getJsonExternalParsed();
                              writeJSONExternal( jsonArray.toString(), "testParsed" );
+                             */
 
                             //make API call
-                             CallAPI callAPI = new CallAPI(MainActivity.this, dateinstance, jsonArray);  // sending context to test with JSON data in assets
+                             CallAPI callAPI = new CallAPI(MainActivity.this, stringdata);  // sending context to test with JSON data in assets
                              callAPI.execute();  // to run the doInBackground method of AsyncTask
 
                              Log.d(TAG, "final string data length: "+ stringdata.length());
@@ -310,6 +315,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /*
     private void writeJSONExternal(String json, String filename) {
 
         String root = getExternalFilesDir(null).getAbsolutePath();
@@ -350,7 +356,9 @@ public class MainActivity extends AppCompatActivity {
             String s;
             while( (s = br.readLine()) != null ){
                 int len = s.length();
+
                 if ( len > 72 && len <80 ){
+
                     if(count > 32) {
                         count = 1;
                         date.setTime( date.getTime() + 1000);
@@ -359,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject json = new JSONObject(s);
                     json.put("index", count);
                     json.put("Time", dateFormat.format(date) );
-                    count +=1;
+                    count += 1;
 
                     //  add to JsonArray
                     jsonArray.put(json);
@@ -375,13 +383,14 @@ public class MainActivity extends AppCompatActivity {
 
         return jsonArray;
     }
+    */
 
     //Kinservice connected/disconnected
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             kinService = ((KinService.LocalBinder) service).getService();
-            Log.d(TAG, "in on Service Connected");
+            Log.d(TAG, "kinService Connected");
             if(!kinService.init()) {
                 Log.e(TAG, "Unable to initialize ble");
                 finish();
@@ -390,6 +399,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Log.d(TAG, "kinService disConnected");
             kinService = null;
         }
     };
@@ -414,6 +424,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "activity resumed and Kinservice: "+ kinService );
         if(!bluetoothAdapter.isEnabled()){
 
             //Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -425,7 +436,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "activity destroyed");
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+
         if(serviceConnection != null)
             unbindService(serviceConnection);
+        kinService.stopSelf();
+        kinService = null ;
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "activity pausued");
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "activity stopped");
+
+    }
+
+
 }

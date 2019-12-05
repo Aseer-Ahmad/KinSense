@@ -51,17 +51,15 @@ public class CallAPI  extends AsyncTask<Void, Void, String> {
 
     private static final String TAG = CallAPI.class.getSimpleName();
     private BufferedReader br;
-    private String dateinstance ;
     private Context context; // remove this later after testing
-    private JSONArray jsonArray;
+    private String stringdata;
     //private ProgressBar progressBar = null;
     private ProgressDialog progressDialog = null;
 
 
-    CallAPI(Context context, String dateinstance, JSONArray  jsonArray) {
+    CallAPI(Context context,  String stringdata) {
             this.context = context;
-            this.dateinstance = dateinstance;
-            this.jsonArray = jsonArray;
+            this.stringdata = stringdata;
         }
 
     @Override
@@ -87,8 +85,8 @@ public class CallAPI  extends AsyncTask<Void, Void, String> {
         intent.putExtra("RESPONSE", s);
         context.startActivity(intent);
     }
-
-    /*public String getData () {
+/*
+    public String getData () {
             String json = null;
             byte[] buffer =null;
             try {
@@ -107,7 +105,7 @@ public class CallAPI  extends AsyncTask<Void, Void, String> {
             return json;
 
         }
-    */
+*/
     @Override
         protected String doInBackground (Void...voids){
 
@@ -125,15 +123,17 @@ public class CallAPI  extends AsyncTask<Void, Void, String> {
                 //long endTime = System.nanoTime();
                 //Log.d(TAG, "time taken to read JSON data from file: "+ (endTime - startTime)/1000000 + " ms");
 
-                //JSONArray jsonArray = new JSONArray(getData()); //remove it after testing
+                /*
+                JSONArray jsonArray = new JSONArray(getData()); //remove it after testing
 
                 JSONObject json = new JSONObject();
                 json.put("data", jsonArray);
+                */
 
-                Log.d(TAG, "request JSONArray object : " + json );
+                Log.d(TAG, "request JSONArray object : " + stringdata );
 
                 DataOutputStream dataOutputStream = new DataOutputStream( connection.getOutputStream());
-                dataOutputStream.writeBytes( json.toString() );
+                dataOutputStream.writeBytes( stringdata );
                 dataOutputStream.flush();
                 dataOutputStream.close();
 
