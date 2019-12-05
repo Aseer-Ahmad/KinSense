@@ -130,7 +130,7 @@ public class CallAPI  extends AsyncTask<Void, Void, String> {
                 json.put("data", jsonArray);
                 */
 
-                Log.d(TAG, "request JSONArray object : " + stringdata );
+                Log.d(TAG, "Request string object : " + stringdata.length() );
 
                 DataOutputStream dataOutputStream = new DataOutputStream( connection.getOutputStream());
                 dataOutputStream.writeBytes( stringdata );

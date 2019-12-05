@@ -105,24 +105,20 @@ public class MainActivity extends Activity {
 
         service_init();
 
-
     }
 
 
     private void setButtonClikListeners() {
 
-        /*
+
         button_testcall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //CallAPI class TESTING
-                //getResponse and send it to a new activity
-                CallAPI callAPI = new CallAPI( MainActivity.this,  stringdata ); // sending context to test with JSON data in assets
-                callAPI.execute();  // to run the doInBackground method of AsyncTask
 
+                //Toast.makeText(getApplicationContext() , elapsedMillis +" ", Toast.LENGTH_LONG).show();
             }
-        });
-        */
+       });
+
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // bluetooth enable button
@@ -173,9 +169,9 @@ public class MainActivity extends Activity {
 
 
     private void findComponenets() {
-        button_testcall = findViewById(R.id.button_testcall);
+        button_testcall = findViewById(R.id.button_testcall); // remove  after testing
         textView_connstatus = findViewById(R.id.textview_connection_status); // connection status in mainActivity
-        textView_showdata = findViewById(R.id.textview_showdata); // bottom text view to show data
+        textView_showdata = findViewById(R.id.textview_showdata); // remove after testing, bottom text view to show data
         b1 = findViewById((R.id.button_bluetooth_enable));
         button_beginwork = findViewById(R.id.button_beginworkout);
         button_stopwork = findViewById(R.id.button_stopworkout);
@@ -238,6 +234,7 @@ public class MainActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             int count = 0 ;
+
             //define for all kinService broadcast
             if(action.equals(KinService.ACTION_GATT_CONNECTED)){
                 runOnUiThread(new Runnable() {
@@ -277,16 +274,21 @@ public class MainActivity extends Activity {
                     @Override
                     public void run() {
                         String text = new String(txValue, StandardCharsets.UTF_8);
+                        final long elapsedMillis = SystemClock.elapsedRealtime() - timer.getBase();
 
                         if( !button_beginwork.isClickable() && button_stopwork.isClickable() ){
+                            FLAG_STOPPED = false;
                             //start capturing data
                             //Log.d(TAG, "string builder appending");
                             sb.append(text);
 
                         }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() && FLAG_STOPPED == false ){
-                             FLAG_STOPPED = true ;
-                            //stop capturing data
-                             stringdata = sb.toString();
+
+                             if(elapsedMillis > 61000) {
+
+                                 FLAG_STOPPED = true;
+                                 //stop capturing data
+                                 stringdata = sb.toString();
 
                              /* used to write data to a file in external storage
                              // and later parse it to send to API
@@ -295,11 +297,14 @@ public class MainActivity extends Activity {
                              writeJSONExternal( jsonArray.toString(), "testParsed" );
                              */
 
-                            //make API call
-                             CallAPI callAPI = new CallAPI(MainActivity.this, stringdata);  // sending context to test with JSON data in assets
-                             callAPI.execute();  // to run the doInBackground method of AsyncTask
+                                 //make API call
+                                 CallAPI callAPI = new CallAPI(MainActivity.this, stringdata);  // sending context to test with JSON data in assets
+                                 callAPI.execute();  // to run the doInBackground method of AsyncTask
 
-                             Log.d(TAG, "final string data length: "+ stringdata.length());
+                                 Log.d(TAG, "final string data length: " + stringdata.length());
+                             }else{
+                                 Toast.makeText(getApplicationContext(), "Please walk atleast 1 minute to get enough data!!", Toast.LENGTH_SHORT).show();
+                             }
                         }
                         //textView_showdata.setText(text);
                     }
