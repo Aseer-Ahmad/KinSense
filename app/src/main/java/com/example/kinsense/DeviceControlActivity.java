@@ -55,7 +55,6 @@ public class DeviceControlActivity extends AppCompatActivity {
     Button buttonScan;
     TextView textViewScanningStatus;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

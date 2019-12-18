@@ -92,6 +92,7 @@ public class MainActivity extends Activity {
 
         bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
+
         findComponenets();
 
         setButtonClikListeners();
@@ -111,13 +112,13 @@ public class MainActivity extends Activity {
     private void setButtonClikListeners() {
 
 
-        button_testcall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //Toast.makeText(getApplicationContext() , elapsedMillis +" ", Toast.LENGTH_LONG).show();
-            }
-       });
+//        button_testcall.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Toast.makeText(getApplicationContext() , elapsedMillis +" ", Toast.LENGTH_LONG).show();
+//            }
+//       });
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,9 +170,10 @@ public class MainActivity extends Activity {
 
 
     private void findComponenets() {
-        button_testcall = findViewById(R.id.button_testcall); // remove  after testing
+
+        //button_testcall = findViewById(R.id.button_testcall); // remove  after testing
         textView_connstatus = findViewById(R.id.textview_connection_status); // connection status in mainActivity
-        textView_showdata = findViewById(R.id.textview_showdata); // remove after testing, bottom text view to show data
+        //textView_showdata = findViewById(R.id.textview_showdata); // remove after testing, bottom text view to show data
         b1 = findViewById((R.id.button_bluetooth_enable));
         button_beginwork = findViewById(R.id.button_beginworkout);
         button_stopwork = findViewById(R.id.button_stopworkout);
@@ -282,20 +284,20 @@ public class MainActivity extends Activity {
                             //Log.d(TAG, "string builder appending");
                             sb.append(text);
 
-                        }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() && FLAG_STOPPED == false ){
+                        }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() && !FLAG_STOPPED){
 
-                             if(elapsedMillis > 61000) {
+                             if(elapsedMillis > 61000) { //check for 1 minute passed while collecting data
 
                                  FLAG_STOPPED = true;
                                  //stop capturing data
                                  stringdata = sb.toString();
 
-                             /* used to write data to a file in external storage
-                             // and later parse it to send to API
-                             writeJSONExternal( stringdata, "test" );
-                             JSONArray jsonArray = getJsonExternalParsed();
-                             writeJSONExternal( jsonArray.toString(), "testParsed" );
-                             */
+                                 /* used to write data to a file in external storage
+                                 // and later parse it to send to API
+                                 writeJSONExternal( stringdata, "test" );
+                                 JSONArray jsonArray = getJsonExternalParsed();
+                                 writeJSONExternal( jsonArray.toString(), "testParsed" );
+                                 */
 
                                  //make API call
                                  CallAPI callAPI = new CallAPI(MainActivity.this, stringdata);  // sending context to test with JSON data in assets
@@ -395,9 +397,9 @@ public class MainActivity extends Activity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             kinService = ((KinService.LocalBinder) service).getService();
-            Log.d(TAG, "kinService Connected");
+            Log.d(TAG, "kinService Connected. Service Connection Initialized");
             if(!kinService.init()) {
-                Log.e(TAG, "Unable to initialize ble");
+                Log.e(TAG, "Unable to initialize ble.");
                 finish();
             }
         }
