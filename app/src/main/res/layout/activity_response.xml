@@ -4,12 +4,248 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".Response">
 
+
+   <LinearLayout
+       android:orientation="horizontal"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Success:  "
+          android:textSize="20sp"
+          android:textStyle="bold" />
+
+      <TextView
+          android:id="@+id/textview_success"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="True"
+          android:textSize="15sp"
+          android:textStyle="italic" />
+
+   </LinearLayout>
+
+   <LinearLayout
+       android:orientation="horizontal"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+      <TextView
+          android:textSize="20sp"
+          android:textStyle="bold"
+          android:text="Result:     "
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <TextView
+          android:id="@+id/textview_result"
+          android:textStyle="italic"
+          android:textSize="15sp"
+          android:text="Error"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+   </LinearLayout>
+
+   <LinearLayout
+       android:orientation="horizontal"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+      <TextView
+          android:textSize="20sp"
+          android:textStyle="bold"
+          android:text="Steps:     "
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <TextView
+          android:id="@+id/textview_steps"
+          android:textStyle="italic"
+          android:textSize="15sp"
+          android:text="---"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+   </LinearLayout>
+
+   <LinearLayout
+       android:orientation="horizontal"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+      <TextView
+          android:textSize="20sp"
+          android:textStyle="bold"
+          android:text="Step Velocity:     "
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <TextView
+          android:id="@+id/textview_stepvelocity"
+          android:textStyle="italic"
+          android:textSize="15sp"
+          android:text="---"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+   </LinearLayout>
+
+   <LinearLayout
+       android:orientation="horizontal"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+      <TextView
+          android:textSize="20sp"
+          android:textStyle="bold"
+          android:text="Step length:     "
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <TextView
+          android:id="@+id/textview_steplength"
+          android:textStyle="italic"
+          android:textSize="15sp"
+          android:text="---"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+   </LinearLayout>
+
+   <LinearLayout
+       android:orientation="horizontal"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+      <TextView
+          android:textSize="20sp"
+          android:textStyle="bold"
+          android:text="Step time:     "
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <TextView
+          android:id="@+id/textview_steptime"
+          android:textStyle="italic"
+          android:textSize="15sp"
+          android:text="---"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+   </LinearLayout>
+
+   <LinearLayout
+       android:orientation="horizontal"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+      <TextView
+          android:textSize="20sp"
+          android:textStyle="bold"
+          android:text="Stride Velocity:     "
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <TextView
+          android:id="@+id/textview_stridevelocity"
+          android:textStyle="italic"
+          android:textSize="15sp"
+          android:text="---"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+   </LinearLayout>
+
+   <LinearLayout
+       android:orientation="horizontal"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+      <TextView
+          android:textSize="20sp"
+          android:textStyle="bold"
+          android:text="Prediction:     "
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <TextView
+          android:id="@+id/textview_prediction"
+          android:textStyle="italic"
+          android:textSize="15sp"
+          android:text="---"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+   </LinearLayout>
+
+   <LinearLayout
+       android:orientation="horizontal"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+      <TextView
+          android:textSize="20sp"
+          android:textStyle="bold"
+          android:text="Stride time:     "
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <TextView
+          android:id="@+id/textview_stridetime"
+          android:textStyle="italic"
+          android:textSize="15sp"
+          android:text="---"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+   </LinearLayout>
+
+   <LinearLayout
+       android:orientation="horizontal"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+      <TextView
+          android:textSize="20sp"
+          android:textStyle="bold"
+          android:text="Stride length:     "
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+      <TextView
+          android:id="@+id/textview_stridelength"
+          android:textStyle="italic"
+          android:textSize="15sp"
+          android:text="---"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+
+   </LinearLayout>
+
    <TextView
-       android:id="@+id/text_response"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text="HELLO"/>
+       android:layout_marginTop="60dp"
+       android:gravity="center"
+       android:id="@+id/textview_responseaction"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"/>
+
+
 
 </LinearLayout>

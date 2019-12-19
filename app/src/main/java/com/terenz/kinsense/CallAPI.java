@@ -1,53 +1,29 @@
-package com.example.kinsense;
+package com.terenz.kinsense;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.util.JsonReader;
 import android.util.Log;
-import android.widget.ProgressBar;
 
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class CallAPI  extends AsyncTask<Void, Void, String> {
 
     private static final String API = "https://app.kinsense.terenz.ai/process/";
-    //private static final String API = "https://42337ae5.ngrok.io/process/";
+    //private static final String API_temp = "https://42337ae5.ngrok.io/process/";
 
     private static final String TAG = CallAPI.class.getSimpleName();
     private BufferedReader br;
@@ -85,7 +61,8 @@ public class CallAPI  extends AsyncTask<Void, Void, String> {
         intent.putExtra("RESPONSE", s);
         context.startActivity(intent);
     }
-/*
+
+    /*
     public String getData () {
             String json = null;
             byte[] buffer =null;
@@ -123,12 +100,11 @@ public class CallAPI  extends AsyncTask<Void, Void, String> {
                 //long endTime = System.nanoTime();
                 //Log.d(TAG, "time taken to read JSON data from file: "+ (endTime - startTime)/1000000 + " ms");
 
-                /*
-                JSONArray jsonArray = new JSONArray(getData()); //remove it after testing
 
-                JSONObject json = new JSONObject();
-                json.put("data", jsonArray);
-                */
+//                JSONArray jsonArray = new JSONArray(getData()); //remove it after testing
+//                JSONObject json = new JSONObject();
+//                json.put("data", jsonArray);
+
 
                 Log.d(TAG, "Request string object : " + stringdata.length() );
 

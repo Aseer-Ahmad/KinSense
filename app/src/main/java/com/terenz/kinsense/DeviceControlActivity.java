@@ -1,11 +1,10 @@
-package com.example.kinsense;
+package com.terenz.kinsense;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
-import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -22,7 +21,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,7 +42,7 @@ public class DeviceControlActivity extends AppCompatActivity {
     private BluetoothManager bluetoothManager;
     List<BluetoothDevice> bluetoothDeviceList = new ArrayList<>();
     DeviceAdapter deviceAdapter;
-    private Handler handler = new Handler();
+    private Handler handler  = new Handler();
 
     //constants & flags
     private static final long SCAN_PERIOD = 10000; //scanning for 10 seconds

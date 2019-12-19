@@ -1,4 +1,4 @@
-package com.example.kinsense;
+package com.terenz.kinsense;
 
 import android.content.Context;
 

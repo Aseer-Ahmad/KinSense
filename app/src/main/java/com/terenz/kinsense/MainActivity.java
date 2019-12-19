@@ -1,13 +1,11 @@
-package com.example.kinsense;
+package com.terenz.kinsense;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -19,14 +17,12 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,23 +31,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Set;
 
 public class MainActivity extends Activity {
 
@@ -106,17 +90,51 @@ public class MainActivity extends Activity {
 
         service_init();
 
+        //temp(); // remove this and delete method
+
     }
+
+//    private void temp() {
+//        JSONObject json = null;
+//        String success = null;
+//
+//        String res_true = "{" +
+//                "\"success\":true," +
+//                "\"result\":{" +
+//                    "\"steps\":43," +
+//                    "\"step_velocity\":0.1873947156396354," +
+//                    "\"step_length\":0.08122956423895486," +
+//                    "\"step_time\":0.4334677419354839," +
+//                    "\"stride_veocity\":0.3747894312792708," +
+//                    "\"prediction\":\"Off\"," +
+//                    "\"stride_time\":0.8669354838709677," +
+//                    "\"stride_length\":0.16245912847790972" +
+//                     "}" +
+//                "}";
+//
+//        String res_false = "{" +
+//                "\"success\": false ," +
+//                "\"result\" : \"Error\" " +
+//                "}";
+//
+//        Log.d(TAG, "going to Response.class");
+//        Intent intent = new Intent(MainActivity.this, Response.class);
+//        intent.putExtra("RESPONSE_test", res_false);
+//        startActivity(intent);
+//
+//    }
 
 
     private void setButtonClikListeners() {
 
-
+//
 //        button_testcall.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //
-//                Toast.makeText(getApplicationContext() , elapsedMillis +" ", Toast.LENGTH_LONG).show();
+//                Log.d(TAG, "Testing API call");
+//                CallAPI callAPI = new CallAPI(MainActivity.this, "");
+//                callAPI.execute();
 //            }
 //       });
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.kinsense">
+    package="com.terenz.kinsense">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -21,9 +21,9 @@
         android:roundIcon="@mipmap/kin_launcher1"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Response"></activity>
-        <activity android:name=".DeviceControlActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.terenz.kinsense.Response"></activity>
+        <activity android:name="com.terenz.kinsense.DeviceControlActivity" />
+        <activity android:name="com.terenz.kinsense.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".KinService" />
+        <service android:name="com.terenz.kinsense.KinService" />
     </application>
 
 </manifest>

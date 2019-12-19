@@ -1,4 +1,4 @@
-package com.example.kinsense;
+package com.terenz.kinsense;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
