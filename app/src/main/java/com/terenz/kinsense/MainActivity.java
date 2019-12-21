@@ -164,7 +164,8 @@ public class MainActivity extends Activity {
                 dateinstance = dateFormat.format(date);
 
                 //set timer here
-                timer.setBase(SystemClock.elapsedRealtime());
+                timer.setBase( SystemClock.elapsedRealtime() );
+                //Log.d(TAG, "beginwork clicked, timer.getbase()"+ timer.getBase() );
                 timer.start();
 
                 //start gathering data from device by writing to RXcharacteristic
@@ -174,14 +175,26 @@ public class MainActivity extends Activity {
         button_stopwork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                icanchor.clearAnimation();
-                button_beginwork.animate().alpha(1).setDuration(400).start();
-                button_stopwork.animate().alpha(0).translationY(80).setDuration(400).start();
-                button_beginwork.setClickable(true);
-                button_stopwork.setClickable(false);
-                //stop timer here
-                timer.stop();
-                //stop gathering data from device by writing to RXcharacteristic
+
+                long elapsedMillis = SystemClock.elapsedRealtime() - timer.getBase();
+
+                if (elapsedMillis > 61000) {
+
+                    icanchor.clearAnimation();
+                    button_beginwork.animate().alpha(1).setDuration(400).start();
+                    button_stopwork.animate().alpha(0).translationY(80).setDuration(400).start();
+                    button_beginwork.setClickable(true);
+                    button_stopwork.setClickable(false);
+                    //stop timer here
+                    //Log.d(TAG, "stopwork clicked, timer.base()" + timer.getBase() +" SystemClock.elapsedRealtime(): "+ SystemClock.elapsedRealtime() +
+                    //        "time duration" + (SystemClock.elapsedRealtime() - timer.getBase()) ) ;
+                    timer.stop();
+
+                    //stop gathering data from device BY WRITING TO RXCHARACTERISTIC
+                }else{
+                    Toast.makeText(getApplicationContext(), "Please walk at least 1 minute to get enough data!!",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -264,6 +277,7 @@ public class MainActivity extends Activity {
                         button_beginwork.setEnabled(true);
                         button_beginwork.setText("BEGIN");
                         textView_connstatus.setText("Connected to "+ bluetoothDevice.getName() );
+
                         state = UART_PROFILE_CONNECTED;
                     }
                 });
@@ -274,9 +288,11 @@ public class MainActivity extends Activity {
                     @Override
                     public void run() {
                     Log.d(TAG, "Uart service disconnected");
-                    Toast.makeText(getApplicationContext(), "No device connected! Please connect to appropriate Device", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "No device connected! Please connect to appropriate Device", Toast.LENGTH_LONG)
+                            .show();
                     button_beginwork.setEnabled(false);
                     button_beginwork.setText("BEGIN(CONNECT TO DEVICE FIRST)");
+
                     state = UART_PROFILE_DISCONNECTED;
                     }
                 });
@@ -293,8 +309,8 @@ public class MainActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String text = new String(txValue, StandardCharsets.UTF_8);
-                        final long elapsedMillis = SystemClock.elapsedRealtime() - timer.getBase();
+                        String text = new String( txValue, StandardCharsets.UTF_8);
+                        //final long elapsedMillis = SystemClock.elapsedRealtime() - timer.getBase();
 
                         if( !button_beginwork.isClickable() && button_stopwork.isClickable() ){
                             FLAG_STOPPED = false;
@@ -302,9 +318,9 @@ public class MainActivity extends Activity {
                             //Log.d(TAG, "string builder appending");
                             sb.append(text);
 
-                        }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() && !FLAG_STOPPED){
+                        }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() && FLAG_STOPPED == false){
 
-                             if(elapsedMillis > 61000) { //check for 1 minute passed while collecting data
+                            // if(elapsedMillis > 61000) { //check for 1 minute passed while collecting data
 
                                  FLAG_STOPPED = true;
                                  //stop capturing data
@@ -318,14 +334,14 @@ public class MainActivity extends Activity {
                                  */
 
                                  //make API call
-                                 CallAPI callAPI = new CallAPI(MainActivity.this, stringdata);  // sending context to test with JSON data in assets
+                                 CallAPI callAPI = new CallAPI(MainActivity.this, stringdata );
                                  callAPI.execute();  // to run the doInBackground method of AsyncTask
 
+
                                  Log.d(TAG, "final string data length: " + stringdata.length());
-                             }else{
-                                 Toast.makeText(getApplicationContext(), "Please walk atleast 1 minute to get enough data!!", Toast.LENGTH_SHORT).show();
-                             }
+                            //}
                         }
+
                         //textView_showdata.setText(text);
                     }
                 });

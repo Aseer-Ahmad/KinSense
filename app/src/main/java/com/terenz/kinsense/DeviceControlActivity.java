@@ -174,7 +174,7 @@ public class DeviceControlActivity extends AppCompatActivity {
                         bluetoothLeScanner.stopScan(scanCallback);
                     }
                 }
-            }, SCAN_PERIOD);
+            }, SCAN_PERIOD );
 
             scanning = true;
             textViewScanningStatus.setText("Scanning...");

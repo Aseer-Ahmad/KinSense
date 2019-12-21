@@ -76,4 +76,5 @@ public class DeviceAdapter extends BaseAdapter {
 
         return view;
     }
+
 }
