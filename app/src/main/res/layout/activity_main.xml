@@ -36,11 +36,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="402dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/bgcircle"
-            android:layout_width="276dp"
+            android:layout_width="100pt"
             android:layout_height="247dp"
             android:layout_gravity="center"
             android:src="@drawable/bgcircle"
@@ -66,56 +66,50 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Chronometer
-        android:id="@+id/chronometer_timer"
-        android:textSize="62sp"
-        android:textColor="@color/colorWhite"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-    <Button
-        android:id="@+id/button_beginworkout"
-        android:text="Begin"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/btngreen"
-        android:layout_gravity="center"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/button_stopworkout"
-        android:text="STOP NOW"
-        android:background="@drawable/btnred"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"/>
+        <Chronometer
+            android:id="@+id/chronometer_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="62sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
+        <Button
+            android:id="@+id/button_beginworkout"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/btngreen"
+            android:text="Begin"
+            app:layout_constraintBottom_toTopOf="@+id/button_stopworkout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chronometer_timer"
+            app:layout_constraintVertical_bias="0.881" />
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:orientation="horizontal">-->
-<!--        <TextView-->
-<!--            android:id="@+id/textview_showdata"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:gravity="center"-->
-<!--            android:textColor="@color/colorWhite" />-->
+        <Button
+            android:id="@+id/button_stopworkout"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/btnred"
+            android:text="STOP NOW"
+            android:layout_marginBottom="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-<!--         <Button-->
-<!--             android:id="@+id/button_testcall"-->
-<!--             android:text="TEST"-->
-<!--             android:layout_width="60dp"-->
-<!--             android:layout_marginRight="10dp"-->
-<!--             android:layout_height="60dp"-->
-<!--             android:background="@drawable/btnwhite"/>-->
-
-<!--        </LinearLayout>-->
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>

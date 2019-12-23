@@ -84,59 +84,16 @@ public class MainActivity extends Activity {
         // Use this check to determine whether BLE is supported on the device. Then
         // you can selectively disable BLE-related features.
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, "BLE not supported", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "BLE not supported !! Cannot use this Application", Toast.LENGTH_LONG).show();
             finish();
         }
 
         service_init();
 
-        //temp(); // remove this and delete method
-
     }
-
-//    private void temp() {
-//        JSONObject json = null;
-//        String success = null;
-//
-//        String res_true = "{" +
-//                "\"success\":true," +
-//                "\"result\":{" +
-//                    "\"steps\":43," +
-//                    "\"step_velocity\":0.1873947156396354," +
-//                    "\"step_length\":0.08122956423895486," +
-//                    "\"step_time\":0.4334677419354839," +
-//                    "\"stride_veocity\":0.3747894312792708," +
-//                    "\"prediction\":\"Off\"," +
-//                    "\"stride_time\":0.8669354838709677," +
-//                    "\"stride_length\":0.16245912847790972" +
-//                     "}" +
-//                "}";
-//
-//        String res_false = "{" +
-//                "\"success\": false ," +
-//                "\"result\" : \"Error\" " +
-//                "}";
-//
-//        Log.d(TAG, "going to Response.class");
-//        Intent intent = new Intent(MainActivity.this, Response.class);
-//        intent.putExtra("RESPONSE_test", res_false);
-//        startActivity(intent);
-//
-//    }
 
 
     private void setButtonClikListeners() {
-
-//
-//        button_testcall.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Log.d(TAG, "Testing API call");
-//                CallAPI callAPI = new CallAPI(MainActivity.this, "");
-//                callAPI.execute();
-//            }
-//       });
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,23 +106,24 @@ public class MainActivity extends Activity {
         button_beginwork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 icanchor.startAnimation(rotate);
+
                 button_stopwork.animate().alpha(1).translationY(-80).setDuration(400).start();
                 button_beginwork.animate().alpha(0).setDuration(400).start();
                 button_beginwork.setClickable(false);
                 button_stopwork.setClickable(true);
                 sb = new StringBuilder();
 
-                //capture local system time
+                //capture local system time for adding timestamp key to JSON
 
-                DateFormat dateFormat = new SimpleDateFormat("a hh:mm:ss");
-                Calendar cal = Calendar.getInstance();
-                Date date=cal.getTime();
-                dateinstance = dateFormat.format(date);
+//                DateFormat dateFormat = new SimpleDateFormat("a hh:mm:ss");
+//                Calendar cal = Calendar.getInstance();
+//                Date date=cal.getTime();
+//                dateinstance = dateFormat.format(date);
 
                 //set timer here
                 timer.setBase( SystemClock.elapsedRealtime() );
-                //Log.d(TAG, "beginwork clicked, timer.getbase()"+ timer.getBase() );
                 timer.start();
 
                 //start gathering data from device by writing to RXcharacteristic
@@ -186,8 +144,7 @@ public class MainActivity extends Activity {
                     button_beginwork.setClickable(true);
                     button_stopwork.setClickable(false);
                     //stop timer here
-                    //Log.d(TAG, "stopwork clicked, timer.base()" + timer.getBase() +" SystemClock.elapsedRealtime(): "+ SystemClock.elapsedRealtime() +
-                    //        "time duration" + (SystemClock.elapsedRealtime() - timer.getBase()) ) ;
+
                     timer.stop();
 
                     //stop gathering data from device BY WRITING TO RXCHARACTERISTIC
@@ -320,7 +277,6 @@ public class MainActivity extends Activity {
 
                         }else if( !button_stopwork.isClickable() && button_beginwork.isClickable() && FLAG_STOPPED == false){
 
-                            // if(elapsedMillis > 61000) { //check for 1 minute passed while collecting data
 
                                  FLAG_STOPPED = true;
                                  //stop capturing data
@@ -338,8 +294,7 @@ public class MainActivity extends Activity {
                                  callAPI.execute();  // to run the doInBackground method of AsyncTask
 
 
-                                 Log.d(TAG, "final string data length: " + stringdata.length());
-                            //}
+                                 Log.d(TAG, "API called. Final string data length: " + stringdata.length());
                         }
 
                         //textView_showdata.setText(text);
@@ -466,12 +421,12 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "activity resumed and Kinservice: "+ kinService );
-        if(!bluetoothAdapter.isEnabled()){
+        //if(!bluetoothAdapter.isEnabled()){
 
             //Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             //startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 
-        }
+        //}
     }
 
     @Override
