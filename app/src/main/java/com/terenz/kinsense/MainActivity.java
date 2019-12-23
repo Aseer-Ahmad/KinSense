@@ -116,7 +116,6 @@ public class MainActivity extends Activity {
                 sb = new StringBuilder();
 
                 //capture local system time for adding timestamp key to JSON
-
 //                DateFormat dateFormat = new SimpleDateFormat("a hh:mm:ss");
 //                Calendar cal = Calendar.getInstance();
 //                Date date=cal.getTime();
